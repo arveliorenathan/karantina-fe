@@ -138,7 +138,7 @@ export default function DetailDialog({ title, trigger, sampel, onSuccess }: Deta
                       <TableHead className="text-center w-1/6 text-white">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
-                  <TableBody>
+                  <TableBody className="border">
                     {sampel.hasil_uji?.map((hasil) => {
                       const currentStatus = hasilUjiStatus.find((h) => h.id === hasil.id)?.status || hasil.status;
                       return (

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  CalendarDays,
   FlaskConical,
   Users,
   ChevronDown,
@@ -30,8 +29,10 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/app/admin/auth-provider";
 
 export function AdminSidebar() {
+  const { user } = useAuth();
   return (
     <Sidebar>
       {/* HEADER */}
@@ -50,25 +51,17 @@ export function AdminSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
-              {/* DASHBOARD
-              <SidebarMenuItem>
-                <SidebarMenuButton variant="default" className="px-4 py-6">
-                  <Link href="/admin/dashboard" className="flex w-full items-center gap-4">
-                    <CalendarDays className="h-5 w-5" />
-                    <span className="font-semibold">Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem> */}
-
               {/* PEGAWAI */}
-              <SidebarMenuItem>
-                <SidebarMenuButton variant="default" className="px-4 py-6">
-                  <Link href="/admin/pegawai" className="flex w-full items-center gap-4">
-                    <Users className="h-5 w-5" />
-                    <span className="font-semibold">Data Pegawai</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {["superadmin"].includes(user?.role || "") && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton variant="default" className="px-4 py-6">
+                    <Link href="/admin/pegawai" className="flex w-full items-center gap-4">
+                      <Users className="h-5 w-5" />
+                      <span className="font-semibold">Data Pegawai</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
 
               {/* LABORATORIUM DROPDOWN */}
               <Collapsible>
@@ -86,13 +79,14 @@ export function AdminSidebar() {
                   {/* SUB MENU */}
                   <CollapsibleContent>
                     <div className="ml-6 mt-2 space-y-1">
-                      <SidebarMenuButton className="py-5">
-                        <Link href="/admin/laboratorium" className="flex items-center gap-3 w-full">
-                          <FlaskConical className="h-4 w-4" />
-                          <span>Data Laboratorium</span>
-                        </Link>
-                      </SidebarMenuButton>
-
+                      {["superadmin"].includes(user?.role || "") && (
+                        <SidebarMenuButton className="py-5">
+                          <Link href="/admin/laboratorium" className="flex items-center gap-3 w-full">
+                            <FlaskConical className="h-4 w-4" />
+                            <span>Data Laboratorium</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      )}
                       <SidebarMenuButton className="py-5">
                         <Link href="/admin/parameter" className="flex items-center gap-3 w-full">
                           <Wrench className="h-4 w-4" />
@@ -133,13 +127,14 @@ export function AdminSidebar() {
                           <span>Penerimaan Sampel</span>
                         </Link>
                       </SidebarMenuButton>
-
-                      <SidebarMenuButton className="py-5">
-                        <Link href="/admin/verifikasi" className="flex items-center gap-3 w-full">
-                          <FileCheck className="h-4 w-4" />
-                          <span>Verifikasi Permohonan</span>
-                        </Link>
-                      </SidebarMenuButton>
+                      {["superadmin", "penyelia"].includes(user?.role || "") && (
+                        <SidebarMenuButton className="py-5">
+                          <Link href="/admin/verifikasi" className="flex items-center gap-3 w-full">
+                            <FileCheck className="h-4 w-4" />
+                            <span>Verifikasi Permohonan</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      )}
                       <SidebarMenuButton className="py-5">
                         <Link href="/admin/surat" className="flex w-full items-center gap-3">
                           <Mails className="h-4 w-4" />
@@ -179,38 +174,42 @@ export function AdminSidebar() {
               </Collapsible>
 
               {/* PNBP */}
-              <Collapsible>
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton variant="default" className="px-4 py-6 flex justify-between">
-                      <div className="flex items-center gap-4">
-                        <Landmark className="h-5 w-5" />
-                        <span className="font-semibold">PNBP</span>
+              {["superadmin", "pnbp"].includes(user?.role || "") && (
+                <Collapsible>
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton variant="default" className="px-4 py-6 flex justify-between">
+                        <div className="flex items-center gap-4">
+                          <Landmark className="h-5 w-5" />
+                          <span className="font-semibold">PNBP</span>
+                        </div>
+                        <ChevronDown className="h-4 w-4 opacity-70" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+
+                    {/* SUB MENU */}
+                    <CollapsibleContent>
+                      <div className="ml-6 mt-2 space-y-1">
+                        <SidebarMenuButton className="py-5">
+                          <Link href="/admin/pnbp" className="flex w-full items-center gap-3">
+                            <Banknote className="h-4 w-4" />
+                            <span className="font-semibold">Data Kuitansi</span>
+                          </Link>
+                        </SidebarMenuButton>
+
+                        {["superadmin"].includes(user?.role || "") && (
+                          <SidebarMenuButton className="py-5">
+                            <Link href="/admin/pnbp/layanan" className="flex items-center gap-3 w-full">
+                              <WalletCards className="h-4 w-4" />
+                              <span className="font-semibold">Data Layanan</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        )}
                       </div>
-                      <ChevronDown className="h-4 w-4 opacity-70" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-
-                  {/* SUB MENU */}
-                  <CollapsibleContent>
-                    <div className="ml-6 mt-2 space-y-1">
-                      <SidebarMenuButton className="py-5">
-                        <Link href="/admin/pnbp" className="flex w-full items-center gap-3">
-                          <Banknote className="h-4 w-4" />
-                          <span className="font-semibold">Data Kuitansi</span>
-                        </Link>
-                      </SidebarMenuButton>
-
-                      <SidebarMenuButton className="py-5">
-                        <Link href="/admin/pnbp/layanan" className="flex items-center gap-3 w-full">
-                          <WalletCards className="h-4 w-4" />
-                          <span className="font-semibold">Data Layanan</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </div>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+                </Collapsible>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

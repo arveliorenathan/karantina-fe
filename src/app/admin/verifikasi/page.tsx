@@ -1,8 +1,8 @@
 "use client";
+
 import DetailDialog from "@/components/admin/verifikasi/detail-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,15 +14,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getSampel } from "@/services/sampelService";
 import { PaginatedSampel, Sampel } from "@/types/sampel";
-import { Eye, SearchIcon } from "lucide-react";
+import { Eye, ListFilter, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Verifikasi() {
   const [search, setSearch] = useState("");
+  const [klasifikasi, setKlasifikasi] = useState("");
   const [loading, setLoading] = useState(true);
   const [sampel, setSampel] = useState<Sampel[]>([]);
   const [pagination, setPagination] = useState({
@@ -30,18 +32,21 @@ export default function Verifikasi() {
     last_page: 1,
   });
 
-  const fetchSampel = async (page: number, status: string) => {
+  const fetchSampel = async (page: number, status: string = "Menunggu Verifikasi", klasifikasiFilter: string = "", searchFilter: string = "") => {
     setLoading(true);
     try {
       const result: PaginatedSampel = await getSampel({
-        status: status,
+        page,
+        status,
+        klasifikasi: klasifikasiFilter,
+        search: searchFilter,
       });
-      setSampel(result.data);
+
+      setSampel(result.data ?? []);
       setPagination({
         current_page: result.current_page,
         last_page: result.last_page,
       });
-      console.log(result.data);
     } catch (error) {
       console.error("Error fetch permohonan:", error);
     } finally {
@@ -49,30 +54,46 @@ export default function Verifikasi() {
     }
   };
 
-  useEffect(() => {
-    fetchSampel(1, "Menunggu Verifikasi");
-  }, []);
 
   return (
     <div className="space-y-4">
+      {/* Filter Section */}
       <Card>
         <CardContent>
           <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-4">
-            <ButtonGroup>
-              <Input
-                placeholder="Cari berdasarkan nama sampel..."
-                className="w-full lg:w-60 xl:w-70"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Button variant="default" aria-label="Search" className="w-full lg:w-auto">
-                <SearchIcon />
-              </Button>
-            </ButtonGroup>
+            <Input
+              placeholder="Cari berdasarkan kode sampel..."
+              className="w-full lg:w-60 xl:w-70"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <Select value={klasifikasi} onValueChange={setKlasifikasi}>
+              <SelectTrigger className="w-56 cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <ListFilter className="h-4 w-4 text-gray-500" />
+                  <SelectValue placeholder="Semua Klasifikasi" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Klasifikasi Laboratorium</SelectLabel>
+                  <SelectItem value="KH">Karantina Hewan</SelectItem>
+                  <SelectItem value="KI">Karantina Ikan</SelectItem>
+                  <SelectItem value="KT">Karantina Tumbuhan</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <Button onClick={() => fetchSampel(1, "Menunggu Verifikasi", klasifikasi, search)} className="flex items-center gap-2">
+              <SearchIcon />
+              Search
+            </Button>
           </div>
         </CardContent>
       </Card>
 
+      {/* Table Section */}
       <Card>
         <CardContent className="space-y-4">
           <Table className="border">
@@ -85,6 +106,7 @@ export default function Verifikasi() {
                 <TableHead className="text-center text-primary-foreground w-1/6">Aksi</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {loading ? (
                 <TableRow>
@@ -102,13 +124,13 @@ export default function Verifikasi() {
                   </TableCell>
                 </TableRow>
               ) : (
-                sampel.map((sampel) => (
-                  <TableRow key={sampel.id}>
-                    <TableCell className="text-center text-xs">{sampel?.kode_sampel}</TableCell>
-                    <TableCell className="text-center text-xs">{sampel?.nama_sampel}</TableCell>
-                    <TableCell className="text-center text-xs">{sampel.permohonan?.nama_perusahaan}</TableCell>
+                sampel.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="text-center text-xs">{item.kode_sampel}</TableCell>
+                    <TableCell className="text-center text-xs">{item.nama_sampel}</TableCell>
+                    <TableCell className="text-center text-xs">{item.permohonan?.nama_perusahaan}</TableCell>
                     <TableCell className="text-center text-xs">
-                      <Badge>{sampel.laboratorium?.nama_laboratorium}</Badge>
+                      <Badge>{item.laboratorium?.nama_laboratorium}</Badge>
                     </TableCell>
                     <TableCell className="text-center">
                       <div className="space-x-2 flex justify-center items-center">
@@ -119,8 +141,8 @@ export default function Verifikasi() {
                               <Eye className="h-4 w-4" />
                             </Button>
                           }
-                          sampel={sampel}
-                          onSuccess={() => fetchSampel(pagination.current_page, "Menunggu Verifikasi")}
+                          sampel={item}
+                          onSuccess={() => fetchSampel(pagination.current_page, "Menunggu Verifikasi", klasifikasi, search)}
                         />
                       </div>
                     </TableCell>
@@ -130,23 +152,24 @@ export default function Verifikasi() {
             </TableBody>
           </Table>
 
+          {/* Pagination */}
           <Pagination>
             <PaginationContent>
-              {/* Previous Button */}
+              {/* Previous */}
               <PaginationItem>
                 <PaginationPrevious
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     if (pagination.current_page > 1) {
-                      fetchSampel(pagination.current_page - 1, "Menunggu Verifikasi");
+                      fetchSampel(pagination.current_page - 1, "Menunggu Verifikasi", klasifikasi, search);
                     }
                   }}
                   className={pagination.current_page === 1 ? "cursor-not-allowed opacity-50" : ""}
                 />
               </PaginationItem>
 
-              {/* Page Number Links */}
+              {/* Page Numbers */}
               {[...Array(pagination.last_page)].map((_, index) => {
                 const pageNum = index + 1;
                 return (
@@ -155,7 +178,7 @@ export default function Verifikasi() {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        fetchSampel(pageNum, "Menunggu Verifikasi");
+                        fetchSampel(pageNum, "Menunggu Verifikasi", klasifikasi, search);
                       }}
                       isActive={pageNum === pagination.current_page}>
                       {pageNum}
@@ -164,21 +187,21 @@ export default function Verifikasi() {
                 );
               })}
 
-              {/* Ellipsis for large page ranges */}
+              {/* Ellipsis */}
               {pagination.current_page < pagination.last_page - 1 && (
                 <PaginationItem>
                   <PaginationEllipsis />
                 </PaginationItem>
               )}
 
-              {/* Next Button */}
+              {/* Next */}
               <PaginationItem>
                 <PaginationNext
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     if (pagination.current_page < pagination.last_page) {
-                      fetchSampel(pagination.current_page + 1, "Menunggu Verifikasi");
+                      fetchSampel(pagination.current_page + 1, "Menunggu Verifikasi", klasifikasi, search);
                     }
                   }}
                   className={pagination.current_page === pagination.last_page ? "cursor-not-allowed opacity-50" : ""}

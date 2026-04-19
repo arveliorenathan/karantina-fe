@@ -15,7 +15,7 @@ export async function getPermohonan(params?: {
   limit?: number;
 }): Promise<PaginatedPermohonan> {
   try {
-    const response = await api.get("/permohonan", {
+    const response = await api.get("/api/permohonan", {
       params: {
         search: params?.search,
         kode_permohonan: params?.kode_permohonan,
@@ -40,7 +40,7 @@ export async function getPermohonan(params?: {
 
 export async function getPermohonanById(id: number) {
   try {
-    const response = await api.get(`/permohonan/${id}`);
+    const response = await api.get(`/api/permohonan/${id}`);
     console.log(`Data permohonan by id ${id}: `, response);
     return response.data.data;
   } catch (error) {
@@ -51,7 +51,7 @@ export async function getPermohonanById(id: number) {
 
 export async function createPermohonan(data: Omit<Permohonan, "id" | "kode_permohonan" | "pin" | "created_at" | "updated_at">) {
   try {
-    const response = await api.post("/permohonan", data);
+    const response = await api.post("/api/permohonan", data);
     toast.success("Data permohonan berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -62,7 +62,7 @@ export async function createPermohonan(data: Omit<Permohonan, "id" | "kode_permo
 
 export async function updatePermohonan(id: number, data: Partial<Permohonan>) {
   try {
-    const response = await api.patch(`/permohonan/${id}`, data);
+    const response = await api.patch(`/api/permohonan/${id}`, data);
     toast.success("Data permohonan berhasil diperbarui");
     return response.data.data;
   } catch (error) {
@@ -73,7 +73,7 @@ export async function updatePermohonan(id: number, data: Partial<Permohonan>) {
 
 export async function deletePermohonan(id: number) {
   try {
-    await api.delete(`/permohonan/${id}`);
+    await api.delete(`/api/permohonan/${id}`);
     toast.success("Data permohonan berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data permohonan");

@@ -246,7 +246,7 @@ export default function KetersediaanParameter() {
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                fetchParameter(pagination.current_page + 1, search, klasifikasi);
+                                fetchParameter(pageNum, search, klasifikasi);
                               }}
                               isActive={pageNum === pagination.current_page}>
                               {pageNum}

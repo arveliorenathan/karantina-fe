@@ -36,11 +36,13 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../../auth-provider";
 
 export default function DetailSampel() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [sampel, setSampel] = useState<Sampel>();
   const [hasil, setHasil] = useState<HasilUji[]>([]);
@@ -242,7 +244,7 @@ export default function DetailSampel() {
           </div>
 
           <div className="flex items-center gap-2">
-            {!isAllSampelFinished && (
+            {(!isAllSampelFinished || hasil.length == 0) && (
               <HasilUjiDialog
                 title="Tambah Data Hasil Uji"
                 trigger={
@@ -269,6 +271,7 @@ export default function DetailSampel() {
                     Buat Kesimpulan
                   </Button>
                 }
+                onSuccess={fetchHasilUji}
               />
             )}
 
@@ -329,41 +332,45 @@ export default function DetailSampel() {
                             <TooltipContent>Detail Laporan Hasil Uji</TooltipContent>
                           </Tooltip>
 
-                          <Tooltip>
-                            <HasilUjiDialog
-                              title="Tambah Data Hasil Uji"
-                              trigger={
-                                <TooltipTrigger asChild>
-                                  <Button variant="default" size="icon-sm" className="bg-yellow-500 hover:bg-yellow-700">
-                                    <Pencil className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                              }
-                              method="edit"
-                              sampel={sampel}
-                              parameterList={parameter}
-                              pegawaiList={pegawai}
-                              defaultValue={hasil}
-                              onSuccess={() => fetchHasilUji()}
-                            />
-                            <TooltipContent>Perbarui Data Parameter</TooltipContent>
-                          </Tooltip>
+                          {["superadmin", "analis", "penyelia"].includes(user?.role || "") && (
+                            <>
+                              <Tooltip>
+                                <HasilUjiDialog
+                                  title="Tambah Data Hasil Uji"
+                                  trigger={
+                                    <TooltipTrigger asChild>
+                                      <Button variant="default" size="icon-sm" className="bg-yellow-500 hover:bg-yellow-700">
+                                        <Pencil className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                  }
+                                  method="edit"
+                                  sampel={sampel}
+                                  parameterList={parameter}
+                                  pegawaiList={pegawai}
+                                  defaultValue={hasil}
+                                  onSuccess={() => fetchHasilUji()}
+                                />
+                                <TooltipContent>Perbarui Data Parameter</TooltipContent>
+                              </Tooltip>
 
-                          <Tooltip>
-                            <DeleteDialog
-                              trigger={
-                                <TooltipTrigger asChild>
-                                  <Button variant="destructive" size="icon">
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                              }
-                              endpoint={`/hasil_uji/${hasil.id}`}
-                              successMessage="Data hasil uji pada sampel berhasil dihapus"
-                              onSuccess={() => fetchHasilUji()}
-                            />
-                            <TooltipContent>Hapus Data Parameter Uji</TooltipContent>
-                          </Tooltip>
+                              <Tooltip>
+                                <DeleteDialog
+                                  trigger={
+                                    <TooltipTrigger asChild>
+                                      <Button variant="destructive" size="icon">
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                  }
+                                  endpoint={`/hasil_uji/${hasil.id}`}
+                                  successMessage="Data hasil uji pada sampel berhasil dihapus"
+                                  onSuccess={() => fetchHasilUji()}
+                                />
+                                <TooltipContent>Hapus Data Parameter Uji</TooltipContent>
+                              </Tooltip>
+                            </>
+                          )}
                         </div>
                       </TableCell>
                     )}

@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Building, Download, PackageSearch, Search, TestTube } from "lucide-react";
+import { Building, Download, InfoIcon, PackageSearch, Search, TestTube } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { PaginatedPermohonan, Permohonan } from "@/types/permohonan";
 import { useCallback, useState } from "react";
 import { getPermohonan } from "@/services/permohonanService";
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function TrackingPermohonan() {
   const [permohonan, setPermohonan] = useState<Permohonan[]>([]);
@@ -244,6 +245,14 @@ export default function TrackingPermohonan() {
                     </CardContent>
                   </Card>
                 ))}
+
+                {permohonan.pnbp?.every((pnbp) => pnbp.status !== "Sudah Dibayar") && (
+                  <Alert className="bg-red-600 text-white">
+                    <InfoIcon />
+                    <AlertTitle>Silahkan Membayar PNBP Terlebih Dahulu</AlertTitle>
+                    <AlertDescription className="text-white">Pembayaran PNBP wajib dilakukan sebelum melanjutkan proses selanjutnya.</AlertDescription>
+                  </Alert>
+                )}
               </CardContent>
             </Card>
           ))

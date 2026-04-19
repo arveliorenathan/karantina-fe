@@ -2,11 +2,18 @@ import api from "@/lib/api";
 import { PaginatedSampel, Sampel } from "@/types/sampel";
 import { toast } from "sonner";
 
-export async function getSampel(params?: { search?: string; page?: number; limit?: number; status?: string }): Promise<PaginatedSampel> {
+export async function getSampel(params?: {
+  search?: string;
+  klasifikasi?: string;
+  page?: number;
+  limit?: number;
+  status?: string;
+}): Promise<PaginatedSampel> {
   try {
-    const response = await api.get("/sampel", {
+    const response = await api.get("/api/sampel", {
       params: {
         search: params?.search,
+        klasifikasi: params?.klasifikasi,
         page: params?.page,
         limit: params?.limit,
         status: params?.status,
@@ -22,7 +29,7 @@ export async function getSampel(params?: { search?: string; page?: number; limit
 
 export async function getSampelById(id: number) {
   try {
-    const response = await api.get(`/sampel/${id}`);
+    const response = await api.get(`/api/sampel/${id}`);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data sampel by id");
@@ -32,7 +39,7 @@ export async function getSampelById(id: number) {
 
 export async function createSampel(data: Omit<Sampel, "id" | "kode_sampel" | "created_at" | "updated_at">) {
   try {
-    const response = await api.post("/sampel", data);
+    const response = await api.post("/api/sampel", data);
     toast.success("Data sampel berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -43,7 +50,7 @@ export async function createSampel(data: Omit<Sampel, "id" | "kode_sampel" | "cr
 
 export async function updateSampel(id: number, data: Partial<Sampel>) {
   try {
-    const response = await api.patch(`/sampel/${id}`, data);
+    const response = await api.patch(`/api/sampel/${id}`, data);
     toast.success("Data sampel berhasil diperbarui");
     return response.data.data;
   } catch (error) {
@@ -54,7 +61,7 @@ export async function updateSampel(id: number, data: Partial<Sampel>) {
 
 export async function deleteSampel(id: number) {
   try {
-    await api.delete(`/sampel/${id}`);
+    await api.delete(`/api/sampel/${id}`);
     toast.success("Data sampel berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data sampel");

@@ -65,7 +65,7 @@ const SignatureSection = ({ data }: { data: { permohonan: Permohonan | null; sur
                     style={{ width: 70, height: 70 }}
                   />
                 </View>
-                <Text style={styles.signatureTableName}>{data?.surat?.[0].penerima_tugas?.[0].nama_pegawai || "___________________"}</Text>
+                <Text style={styles.signatureTableName}>{data?.surat?.[0]?.penerima_tugas?.[0].nama_pegawai || "___________________"}</Text>
               </View>
 
               <View style={styles.signatureTableColumn}>
@@ -76,7 +76,7 @@ const SignatureSection = ({ data }: { data: { permohonan: Permohonan | null; sur
                     style={{ width: 70, height: 70 }}
                   />
                 </View>
-                <Text style={styles.signatureTableName}>{data?.surat?.[0].penerima_tugas?.[1].nama_pegawai || "___________________"}</Text>
+                <Text style={styles.signatureTableName}>{data?.surat?.[0]?.penerima_tugas?.[1].nama_pegawai || "___________________"}</Text>
               </View>
             </View>
           </View>

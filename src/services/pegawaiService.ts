@@ -9,7 +9,7 @@ export async function getPegawai(params?: {
   limit?: number
 }): Promise<PaginatedPegawai> {
   try {
-    const response = await api.get("/pegawai", {
+    const response = await api.get("/api/pegawai", {
       params: {
         search: params?.search,
         status: params?.status,
@@ -28,7 +28,7 @@ export async function getPegawai(params?: {
 
 export async function getPegawaiById(id: number) {
   try {
-    const response = await api.get(`/pegawai/${id}`);
+    const response = await api.get(`/api/pegawai/${id}`);
     console.log(`Data pegawai by id ${id}: `, response);
     return response.data.data;
   } catch (error) {
@@ -41,7 +41,7 @@ export async function createPegawai(
   data: Omit<Pegawai, "id" | "created_at" | "updated_at">,
 ) {
   try {
-    const response = await api.post("/pegawai", data);
+    const response = await api.post("/api/pegawai", data);
     toast.success("Data pegawai berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -52,7 +52,7 @@ export async function createPegawai(
 
 export async function updatePegawai(id: number, data: Partial<Pegawai>) {
   try {
-    const response = await api.patch(`/pegawai/${id}`, data);
+    const response = await api.patch(`/api/pegawai/${id}`, data);
     toast.success("Data pegawai berhasil diperbarui");
     return response.data.data;
   } catch (error) {
@@ -63,7 +63,7 @@ export async function updatePegawai(id: number, data: Partial<Pegawai>) {
 
 export async function deletePegawai(id: number) {
   try {
-    await api.delete(`/pegawai/${id}`);
+    await api.delete(`/api/pegawai/${id}`);
     toast.success("Data pegawai berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menhapus data pegawai");

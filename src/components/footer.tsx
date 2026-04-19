@@ -9,7 +9,7 @@ export default function Footer() {
             <Building2 className="h-4 w-4" />
             <span>© 2026 Balai Karantina Hewan, Ikan, dan Tumbuhan</span>
           </div>
-          <p className="text-xs text-muted-foreground">Sistem Informasi Manajemen Pengujian Karantina</p>
+          <p className="text-xs text-muted-foreground">Sistem Informasi e-Laboratory Balai Karantina Hewan, Ikan, dan Tumbuhan Bali</p>
         </div>
       </div>
     </footer>

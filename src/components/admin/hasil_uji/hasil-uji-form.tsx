@@ -216,6 +216,7 @@ export default function HasilUjiForm({ defaultValue, onSubmit, loading, sampel, 
                         <SelectValue placeholder="Pilih status hasil uji" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="Revisi LHU">Revisi LHU</SelectItem>
                         <SelectItem value="LHU Sementara">LHU Sementara</SelectItem>
                         <SelectItem value="Hasil Sementara">Hasil Sementara</SelectItem>
                         <SelectItem value="Pengujian">Pengujian</SelectItem>

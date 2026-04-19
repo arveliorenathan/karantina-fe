@@ -23,8 +23,10 @@ import { PaginatedParameter, Parameter } from "@/types/parameter";
 import { SearchIcon, Pencil, Eye, Plus, ListFilter, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
+import { useAuth } from "../auth-provider";
 
 export default function ParameterPage() {
+  const { user } = useAuth();
   const [parameter, setParameter] = useState<Parameter[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -62,24 +64,24 @@ export default function ParameterPage() {
   const getBadgeClass = (klasifikasi: string) => {
     switch (klasifikasi) {
       case "KH":
-        return "bg-purple-500 text-white"; // Klasifikasi KH
+        return "bg-purple-500 text-white";
       case "KI":
-        return "bg-blue-500 text-white"; // Klasifikasi KI
+        return "bg-blue-500 text-white";
       case "KT":
-        return "bg-green-500 text-white"; // Klasifikasi KT
+        return "bg-green-500 text-white";
       default:
-        return "bg-gray-400 text-white"; // Klasifikasi default
+        return "bg-gray-400 text-white";
     }
   };
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case "Tersedia":
-        return "bg-green-500 text-white"; // Status Tersedia
+        return "bg-green-500 text-white";
       case "Tidak Tersedia":
-        return "bg-red-500 text-white"; // Status Tidak Tersedia
+        return "bg-red-500 text-white";
       default:
-        return "bg-gray-400 text-white"; // Status default
+        return "bg-gray-400 text-white";
     }
   };
 
@@ -121,13 +123,15 @@ export default function ParameterPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button
-                size="sm"
-                onClick={() => router.push("/admin/parameter/management")}
-                className="flex items-center gap-2 px-6 shadow-sm hover:shadow-md transition cursor-pointer w-full lg:w-auto">
-                <Plus className="h-5 w-5" />
-                <span className="font-semibold">Tambah parameter</span>
-              </Button>
+              {user?.role === "superadmin" && (
+                <Button
+                  size="sm"
+                  onClick={() => router.push("/admin/parameter/management")}
+                  className="flex items-center gap-2 px-6 shadow-sm hover:shadow-md transition cursor-pointer w-full lg:w-auto">
+                  <Plus className="h-5 w-5" />
+                  <span className="font-semibold">Tambah parameter</span>
+                </Button>
+              )}
             </div>
 
             {/* Parameter Table */}
@@ -195,33 +199,38 @@ export default function ParameterPage() {
                               </TooltipTrigger>
                               <TooltipContent>Lihat Detail Data Parameter</TooltipContent>
                             </Tooltip>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="default"
-                                  size="icon-sm"
-                                  className="bg-yellow-500 hover:bg-yellow-700"
-                                  onClick={() => router.push(`/admin/parameter/management?id=${parameter.id}`)}>
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Lihat Detail Data Parameter</TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                              <DeleteDialog
-                                trigger={
+                            {user?.role === "superadmin" && (
+                              <>
+                                <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Button variant="destructive" size="icon" className="hover:bg-red-700">
-                                      <Trash2 className="h-4 w-4" />
+                                    <Button
+                                      variant="default"
+                                      size="icon-sm"
+                                      className="bg-yellow-500 hover:bg-yellow-700"
+                                      onClick={() => router.push(`/admin/parameter/management?id=${parameter.id}`)}>
+                                      <Pencil className="h-4 w-4" />
                                     </Button>
                                   </TooltipTrigger>
-                                }
-                                endpoint={`/parameter/${parameter.id}`}
-                                successMessage="Data laboratorium berhasil dihapus"
-                                onSuccess={() => fetchParameter(pagination.current_page)}
-                              />
-                              <TooltipContent>Hapus Data Parameter</TooltipContent>
-                            </Tooltip>
+                                  <TooltipContent>Edit Data Parameter</TooltipContent>
+                                </Tooltip>
+
+                                <Tooltip>
+                                  <DeleteDialog
+                                    trigger={
+                                      <TooltipTrigger asChild>
+                                        <Button variant="destructive" size="icon" className="hover:bg-red-700">
+                                          <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                    }
+                                    endpoint={`/parameter/${parameter.id}`}
+                                    successMessage="Data laboratorium berhasil dihapus"
+                                    onSuccess={() => fetchParameter(pagination.current_page)}
+                                  />
+                                  <TooltipContent>Hapus Data Parameter</TooltipContent>
+                                </Tooltip>
+                              </>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -255,7 +264,7 @@ export default function ParameterPage() {
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          fetchParameter(pageNum, search, klasifikasi); 
+                          fetchParameter(pageNum, search, klasifikasi);
                         }}
                         isActive={pageNum === pagination.current_page}>
                         {pageNum}

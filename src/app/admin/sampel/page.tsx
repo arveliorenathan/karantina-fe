@@ -158,21 +158,23 @@ export default function SampelPage() {
                               <Eye className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Detail Laporan Hasil Uji</TooltipContent>
+                          <TooltipContent>Detail Sampel</TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="default"
-                              size="icon-sm"
-                              className="bg-yellow-500 hover:bg-yellow-700"
-                              onClick={() => router.push(`/admin/sampel/management?id=${sampel.id}`)}>
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Detail Laporan Hasil Uji</TooltipContent>
-                        </Tooltip>
+                        {(!sampel.tanggal_penandatanganan || !sampel.hasil_uji?.every((h) => h.status === "Selesai")) && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="default"
+                                size="icon-sm"
+                                className="bg-yellow-500 hover:bg-yellow-700"
+                                onClick={() => router.push(`/admin/sampel/management?id=${sampel.id}`)}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Ubah Data Sampel</TooltipContent>
+                          </Tooltip>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
