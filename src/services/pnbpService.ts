@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 export async function getPNBP(params?: { search?: string; page?: number; status?: string; limit?: number }): Promise<PaginatedPNBP> {
   try {
-    const response = await api.get("/api/pnbp", {
+    const response = await api.get("/pnbp", {
       params: {
         search: params?.search,
         page: params?.page,
@@ -23,7 +23,7 @@ export async function getPNBP(params?: { search?: string; page?: number; status?
 
 export async function getPNBPById(id: number) {
   try {
-    const response = await api.get(`/api/pnbp/${id}`);
+    const response = await api.get(`/pnbp/${id}`);
     console.log(`Data PNBP by id ${id}`, response);
     return response.data.data;
   } catch (error) {
@@ -34,7 +34,7 @@ export async function getPNBPById(id: number) {
 
 export async function createPNBP(data: Omit<Pnbp, "id" | "no_pnbp" | "no_bil" | "ntpn" | "status" | "created_at" | "updated_at">) {
   try {
-    const response = await api.post("/api/pnbp", data);
+    const response = await api.post("/pnbp", data);
     toast.success("Data PNBP berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -45,7 +45,7 @@ export async function createPNBP(data: Omit<Pnbp, "id" | "no_pnbp" | "no_bil" | 
 
 export async function updatePNBP(id: number, data: Partial<Pnbp>) {
   try {
-    const response = await api.patch(`/api/pnbp/${id}`, data);
+    const response = await api.patch(`/pnbp/${id}`, data);
     toast.success("Data PNBP berhasil di perbaharui");
     return response.data.data;
   } catch (error) {
@@ -56,7 +56,7 @@ export async function updatePNBP(id: number, data: Partial<Pnbp>) {
 
 export async function deletePNBP(id: number) {
   try {
-    await api.delete(`/api/pnbp/${id}`);
+    await api.delete(`/pnbp/${id}`);
     toast.success("Data PNBP berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data PNBP");

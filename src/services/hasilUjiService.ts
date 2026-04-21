@@ -4,7 +4,7 @@ import { HasilUji } from "@/types/hasilUji";
 
 export async function getHasilUji(sampel_id?: number, status?: string) {
   try {
-    const response = await api.get("/api/hasil_uji", {
+    const response = await api.get("/hasil_uji", {
       params: {
         sampel_id: sampel_id,
         status: status,
@@ -20,7 +20,7 @@ export async function getHasilUji(sampel_id?: number, status?: string) {
 
 export async function getHasilUjiById(id: number) {
   try {
-    const response = await api.get(`/api/hasil_uji/${id}`);
+    const response = await api.get(`/hasil_uji/${id}`);
     console.log(`Data hasil_uji by id ${id}`, response);
     return response.data.data;
   } catch (error) {
@@ -31,7 +31,7 @@ export async function getHasilUjiById(id: number) {
 
 export async function createHasilUji(data: Omit<HasilUji, "id" | "created_at" | "updated_at">) {
   try {
-    const response = await api.post("/api/hasil_uji", data);
+    const response = await api.post("/hasil_uji", data);
     toast.success("Data hasil uji berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -42,7 +42,7 @@ export async function createHasilUji(data: Omit<HasilUji, "id" | "created_at" | 
 
 export async function updateHasilUji(id: number, data: Partial<HasilUji>) {
   try {
-    const response = await api.patch(`/api/hasil_uji/${id}`, data);
+    const response = await api.patch(`/hasil_uji/${id}`, data);
     toast.success("Data hasil uji berhasil di perbaharui");
     return response.data.data;
   } catch (error) {
@@ -53,7 +53,7 @@ export async function updateHasilUji(id: number, data: Partial<HasilUji>) {
 
 export async function deleteHasilUji(id: number) {
   try {
-    await api.delete(`/api/hasil_uji/${id}`);
+    await api.delete(`/hasil_uji/${id}`);
     toast.success("Data hasil uji berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data hasil uji");

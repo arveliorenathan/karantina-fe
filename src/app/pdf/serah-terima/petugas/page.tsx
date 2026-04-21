@@ -34,7 +34,7 @@ export default function SerahTerimaPetugasPage() {
     const fetchSurat = async () => {
       try {
         const result = await getSurat({
-          kode_permohonan: permohonan?.kode_permohonan,
+          permohonan_id: permohonan?.kode_permohonan,
           perihal: "Pemerikasaan Administrasi dan Penerimaan Sampel",
           limit: 0,
         });
@@ -53,7 +53,7 @@ export default function SerahTerimaPetugasPage() {
   }, [id, permohonan?.kode_permohonan]);
 
   if (loading) {
-    return <LoadingOverlay text="Memuat data..." />;
+    return <LoadingOverlay text="Menampilkan PDF..." />;
   }
   return (
     <div>

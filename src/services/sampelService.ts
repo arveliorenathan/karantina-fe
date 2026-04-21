@@ -10,7 +10,7 @@ export async function getSampel(params?: {
   status?: string;
 }): Promise<PaginatedSampel> {
   try {
-    const response = await api.get("/api/sampel", {
+    const response = await api.get("/sampel", {
       params: {
         search: params?.search,
         klasifikasi: params?.klasifikasi,
@@ -29,7 +29,7 @@ export async function getSampel(params?: {
 
 export async function getSampelById(id: number) {
   try {
-    const response = await api.get(`/api/sampel/${id}`);
+    const response = await api.get(`/sampel/${id}`);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data sampel by id");
@@ -39,7 +39,7 @@ export async function getSampelById(id: number) {
 
 export async function createSampel(data: Omit<Sampel, "id" | "kode_sampel" | "created_at" | "updated_at">) {
   try {
-    const response = await api.post("/api/sampel", data);
+    const response = await api.post("/sampel", data);
     toast.success("Data sampel berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -50,7 +50,7 @@ export async function createSampel(data: Omit<Sampel, "id" | "kode_sampel" | "cr
 
 export async function updateSampel(id: number, data: Partial<Sampel>) {
   try {
-    const response = await api.patch(`/api/sampel/${id}`, data);
+    const response = await api.patch(`/sampel/${id}`, data);
     toast.success("Data sampel berhasil diperbarui");
     return response.data.data;
   } catch (error) {
@@ -61,7 +61,7 @@ export async function updateSampel(id: number, data: Partial<Sampel>) {
 
 export async function deleteSampel(id: number) {
   try {
-    await api.delete(`/api/sampel/${id}`);
+    await api.delete(`/sampel/${id}`);
     toast.success("Data sampel berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data sampel");

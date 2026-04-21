@@ -34,7 +34,7 @@ export default function SerahTerimaPenggunaJasaPage() {
   }, [id]);
 
   if (loading) {
-    return <LoadingOverlay text="Memuat data..." />;
+    return <LoadingOverlay text="Menampilkan PDF..." />;
   }
   return (
     <div>

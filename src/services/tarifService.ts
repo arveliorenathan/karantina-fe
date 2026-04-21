@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 export async function getTarif(params?: { search?: string; page?: number; klasifikasi?: string; limit?: number }): Promise<PaginatedTarif> {
   try {
-    const response = await api.get("/api/tarif", {
+    const response = await api.get("/tarif", {
       params: {
         search: params?.search,
         page: params?.page,
@@ -23,7 +23,7 @@ export async function getTarif(params?: { search?: string; page?: number; klasif
 
 export async function getTarifById(id: number) {
   try {
-    const response = await api.get(`/api/tarif/${id}`);
+    const response = await api.get(`/tarif/${id}`);
     console.log(`Data tarif by id ${id}`, response);
     return response.data.data;
   } catch (error) {
@@ -34,7 +34,7 @@ export async function getTarifById(id: number) {
 
 export async function createTarif(data: Omit<Tarif, "id" | "kelompok_pengujian" | "created_at" | "updated_at">) {
   try {
-    const response = await api.post("/api/tarif", data);
+    const response = await api.post("/tarif", data);
     toast.success("Data tarif berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
@@ -45,7 +45,7 @@ export async function createTarif(data: Omit<Tarif, "id" | "kelompok_pengujian" 
 
 export async function updateTarif(id: number, data: Partial<Tarif>) {
   try {
-    const response = await api.patch(`/api/tarif/${id}`, data);
+    const response = await api.patch(`/tarif/${id}`, data);
     toast.success("Data tarif berhasil di perbaharui");
     return response.data.data;
   } catch (error) {
@@ -56,7 +56,7 @@ export async function updateTarif(id: number, data: Partial<Tarif>) {
 
 export async function deleteTarif(id: number) {
   try {
-    await api.delete(`/api/tarif/${id}`);
+    await api.delete(`/tarif/${id}`);
     toast.success("Data tarif berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data tarif");

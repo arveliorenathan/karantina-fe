@@ -24,7 +24,6 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
       jabatan: "",
       email: "",
       kontak: "",
-      jenis_kelamin: undefined,
       status: isEditMode ? defaultValue?.status : "Aktif",
       ...defaultValue,
     },
@@ -70,7 +69,7 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Golongan */}
+            {/* Jabatan */}
             <Controller
               name="golongan"
               control={form.control}
@@ -79,42 +78,18 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
                   <FieldLabel htmlFor="golongan">
                     Golongan <span className="text-red-500">*</span>
                   </FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pilih golongan pegawai" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {/* Golongan IV */}
-                      <SelectItem value="Golongan IV/a - Pembina Utama">Golongan IV/a - Pembina Utama</SelectItem>
-                      <SelectItem value="Golongan IV/b - Pembina Utama Muda">Golongan IV/b - Pembina Utama Muda</SelectItem>
-                      <SelectItem value="Golongan IV/c - Pembina Tingkat I">Golongan IV/c - Pembina Tingkat I</SelectItem>
-                      <SelectItem value="Golongan IV/d - Pembina Utama Madya">Golongan IV/d - Pembina Utama Madya</SelectItem>
-                      <SelectItem value="Golongan IV/e - Pembina Utama">Golongan IV/e - Pembina Utama</SelectItem>
-
-                      {/* Golongan III */}
-                      <SelectItem value="Golongan III/a - Penata Muda">Golongan III/a - Penata Muda</SelectItem>
-                      <SelectItem value="Golongan III/b - Penata Muda Tingkat I">Golongan III/b - Penata Muda Tingkat I</SelectItem>
-                      <SelectItem value="Golongan III/c - Penata">Golongan III/c - Penata</SelectItem>
-                      <SelectItem value="Golongan III/d - Penata Tingkat I">Golongan III/d - Penata Tingkat I</SelectItem>
-
-                      {/* Golongan II */}
-                      <SelectItem value="Golongan II/a - Pengatur Muda">Golongan II/a - Pengatur Muda</SelectItem>
-                      <SelectItem value="Golongan II/b - Pengatur Muda Tingkat I">Golongan II/b - Pengatur Muda Tingkat I</SelectItem>
-                      <SelectItem value="Golongan II/c - Pengatur">Golongan II/c - Pengatur</SelectItem>
-                      <SelectItem value="Golongan II/d - Pengatur Tingkat I">Golongan II/d - Pengatur Tingkat I</SelectItem>
-
-                      {/* Golongan I */}
-                      <SelectItem value="Golongan I/a - Juru Muda">Golongan I/a - Juru Muda</SelectItem>
-                      <SelectItem value="Golongan I/b - Juru Juru Muda Tingkat I">Golongan I/b - Juru Muda Tingkat I</SelectItem>
-                      <SelectItem value="Golongan I/c - Juru">Golongan I/c - Juru</SelectItem>
-                      <SelectItem value="Golongan I/d - Juru Tingkat I">Golongan I/d - Juru Tingkat I</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    {...field}
+                    id="golongan"
+                    type="text"
+                    placeholder="Contoh: Pembina Utama Muda - IV/c"
+                    aria-invalid={fieldState.invalid}
+                    required
+                  />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
-
             {/* Jabatan */}
             <Controller
               name="jabatan"
@@ -138,9 +113,7 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field>
-                  <FieldLabel htmlFor="email">
-                    Email <span className="text-red-500">*</span>
-                  </FieldLabel>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
                   <Input {...field} id="email" type="email" placeholder="Contoh: example@gmail.com" aria-invalid={fieldState.invalid} required />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -152,9 +125,7 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field>
-                  <FieldLabel htmlFor="kontak">
-                    Kontak <span className="text-red-500">*</span>
-                  </FieldLabel>
+                  <FieldLabel htmlFor="kontak">Kontak</FieldLabel>
                   <Input {...field} id="kontak" type="text" placeholder="Contoh: 08..." aria-invalid={fieldState.invalid} required />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -162,54 +133,29 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            {/* Jenis Kelamin */}
-            <Controller
-              name="jenis_kelamin"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel htmlFor="jenis_kelamin">
-                    Jenis Kelamin <span className="text-red-500">*</span>
-                  </FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pilih jenis kelamin" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Pria">Laki-Laki</SelectItem>
-                      <SelectItem value="Wanita">Perempuan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-
-            {/* Status */}
-            <Controller
-              name="status"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel htmlFor="status">
-                    Status <span className="text-red-500">*</span>
-                  </FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pilih status pegawai" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Aktif">Aktif</SelectItem>
-                      <SelectItem value="Cuti">Cuti</SelectItem>
-                      <SelectItem value="Non Aktif">Non Aktif</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          </div>
+          {/* Status */}
+          <Controller
+            name="status"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="status">
+                  Status <span className="text-red-500">*</span>
+                </FieldLabel>
+                <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih status pegawai" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Aktif">Aktif</SelectItem>
+                    <SelectItem value="Cuti">Cuti</SelectItem>
+                    <SelectItem value="Non Aktif">Non Aktif</SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.error && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
 
           {/* Button Submit */}
           <Field>

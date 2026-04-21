@@ -47,6 +47,35 @@ const SignatureSection = ({ data }: { data: { permohonan: Permohonan | null; sur
   <View wrap={false} style={{ width: "100%" }}>
     <Table style={styles.signatureTable} tdStyle={styles.signatureTd} trStyle={{ fontSize: 10 }}>
       <TH>
+        <TD style={{ justifyContent: "center", alignItems: "center" }}>Kaji Ulang Permintaan</TD>
+      </TH>
+      <TR>
+        <TD>
+          <View style={{ flex: "1", flexDirection: "row", gap: "64" }}>
+            <View>
+              <Text style={styles.label}>Kondisi Sampel Uji:</Text>
+              <View style={styles.checkboxColumn}>
+                <CheckboxItem checked={data?.permohonan?.sampel?.some((item) => item.kondisi === "Segar")} label="Segar" />
+                <CheckboxItem checked={data?.permohonan?.sampel?.some((item) => item.kondisi === "Beku")} label="Beku" />
+                <CheckboxItem checked={data?.permohonan?.sampel?.some((item) => item.kondisi === "Hidup")} label="Hidup" />
+                <CheckboxItem checked={data?.permohonan?.sampel?.some((item) => item.kondisi === "Baik/Sesuai")} label="Baik/Sesuai" />
+                <CheckboxItem checked={data?.permohonan?.sampel?.some((item) => item.kondisi === "Lainnya")} label="Lainnya" />
+              </View>
+            </View>
+            <View>
+              <Text style={styles.label}>Ketersediaan:</Text>
+              <View style={styles.checkboxColumn}>
+                <CheckboxItem label="Personil" />
+                <CheckboxItem label="Bahan / Reagen Uji" />
+                <CheckboxItem label="Peralatan" />
+              </View>
+            </View>
+          </View>
+        </TD>
+      </TR>
+    </Table>
+    <Table style={styles.signatureTable} tdStyle={styles.signatureTd} trStyle={{ fontSize: 10 }}>
+      <TH>
         <TD style={{ justifyContent: "center", alignItems: "center" }}>Berita Acara Serah Terima Sampel Uji</TD>
       </TH>
       <TR>
@@ -169,8 +198,8 @@ export const SerahTerimaPetugas = ({ data }: { data: { permohonan: Permohonan | 
             </View>
 
             <View style={styles.checkboxColumn}>
-              <CheckboxItem checked={isChecked("Lalu Lintas Ekspor", data?.permohonan?.tujuan_pengujian)} label="Lainnya" />
-              <CheckboxItem checked={isChecked("Lalu Lintas Impor", data?.permohonan?.tujuan_pengujian)} label="Lainnya" />
+              <CheckboxItem checked={isChecked("Lalu Lintas Ekspor", data?.permohonan?.tujuan_pengujian)} label="Lalu Lintas Ekspor" />
+              <CheckboxItem checked={isChecked("Lalu Lintas Impor", data?.permohonan?.tujuan_pengujian)} label="Lalu Lintas Impor" />
               <CheckboxItem checked={isChecked("Lainnya", data?.permohonan?.tujuan_pengujian)} label="Lainnya" />
             </View>
           </View>

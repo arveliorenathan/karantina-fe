@@ -339,6 +339,7 @@ export default function PermohonanPage() {
 
                               <DropdownMenuItem
                                 className="gap-2 cursor-pointer"
+                                disabled={permohonan.status == "Selesai"}
                                 onClick={() => router.push(`/admin/permohonan/management?id=${permohonan.id}`)}>
                                 <Pencil className="h-4 w-4" />
                                 <span>Edit Permohonan</span>

@@ -34,7 +34,7 @@ export default function SuratDocument() {
   }, [id]);
 
   if (loading) {
-    return <LoadingOverlay text="Memuat data..." />;
+    return <LoadingOverlay text="Menampilkan PDF..." />;
   }
 
   return (

@@ -6,6 +6,7 @@ export const CreateSampelSchema = z.object({
   spesies: z.string().min(1, "Spesies wajib diisi"),
   jumlah: z.number().min(1, "Jumlah minimal 1"),
   satuan: z.string().min(1, "Satuan wajib diisi"),
+  kondisi: z.string().min(1, "Kondisi wajib diisi"),
   lab_id: z.number().min(1, "Laboratorium wajib dipilih"),
   tanggal_pengujian: z.string().nullable(),
 });

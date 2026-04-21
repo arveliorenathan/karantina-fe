@@ -16,7 +16,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getSampel } from "@/services/sampelService";
+import { getSurat } from "@/services/suratService";
 import { PaginatedSampel, Sampel } from "@/types/sampel";
+import { PaginatedSurat, Surat } from "@/types/surat";
 
 import { ClipboardList, Eye, Pencil, Plus, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,6 +26,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function SampelPage() {
   const [sampel, setSampel] = useState<Sampel[]>([]);
+  const [surat, setSurat] = useState<Surat[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -43,6 +46,26 @@ export default function SampelPage() {
         search,
       });
       setSampel(result.data);
+      setPagination({
+        current_page: result.current_page,
+        last_page: result.last_page,
+      });
+    } catch (error) {
+      console.error("Error fetch permohonan:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchSurat = useCallback(async (page: number, permohonan_id: string) => {
+    setLoading(true);
+    try {
+      const result: PaginatedSurat = await getSurat({
+        page,
+        permohonan_id: permohonan_id,
+        perihal: "Laporan Hasil Uji Laboratorium",
+      });
+      setSurat(result.data);
       setPagination({
         current_page: result.current_page,
         last_page: result.last_page,
@@ -144,8 +167,11 @@ export default function SampelPage() {
                             <Button
                               variant="default"
                               size="icon-sm"
-                              disabled={!sampel.tanggal_penandatanganan}
-                              onClick={() => router.push(`/pdf/hasil-uji?id=${sampel.id}`)}>
+                              disabled={
+                                !sampel.tanggal_penandatanganan &&
+                                !surat.some((s) => s.perihal === "Laporan Pengujian" && s.permohonan?.kode_permohonan === sampel.kode_sampel)
+                              }
+                              onClick={() => router.push(`/pdf/hasil-uji-preview?id=${sampel.id}`)}>
                               <ClipboardList className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>

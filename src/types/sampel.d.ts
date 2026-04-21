@@ -10,6 +10,7 @@ export type Sampel = {
   spesies: string;
   jumlah: number;
   satuan: string;
+  kondisi: string;
   lab_id: number;
   tanggal_pengujian?: string | null;
   tanggal_penandatanganan?: string | null;

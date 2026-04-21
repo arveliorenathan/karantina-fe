@@ -67,14 +67,14 @@ export const styles = StyleSheet.create({
 
   biodataRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "flex-start",
     marginBottom: 4,
   },
 
   label: {
     fontSize: 10,
-    width: "30%",
+    width: "25%",
     marginRight: 10,
     marginBottom: 5,
     fontWeight: "bold",
@@ -83,8 +83,8 @@ export const styles = StyleSheet.create({
 
   data: {
     fontSize: 10,
+    flex: 1,
     flexWrap: "wrap",
-    wordBreak: "break-word",
   },
 
   checkBoxLabel: {

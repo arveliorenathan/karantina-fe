@@ -130,9 +130,7 @@ export default function PegawaiPage() {
                 <TableHead className="text-center text-primary-foreground w-24">Golongan</TableHead>
                 <TableHead className="text-center text-primary-foreground w-24">Jabatan</TableHead>
                 <TableHead className="text-center text-primary-foreground w-24">Kontak</TableHead>
-                <TableHead className="text-center text-primary-foreground w-24">Jenis Kelamin</TableHead>
                 <TableHead className="text-center text-primary-foreground w-24">Status</TableHead>
-                {/* <TableHead className="text-center text-primary-foreground w-24">Role</TableHead> */}
                 <TableHead className="text-center text-primary-foreground w-24">Aksi</TableHead>
               </TableRow>
             </TableHeader>
@@ -164,21 +162,17 @@ export default function PegawaiPage() {
                       <div className="flex flex-col gap-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-3 text-gray-700">
                           <Mail className="h-4 w-4 text-blue-500" />
-                          <span className="text-xs font-medium">{pegawai.email ?? "-"}</span>
+                          <span className="text-xs font-medium">{pegawai.email ?? "Belum Diset"}</span>
                         </div>
                         <div className="flex items-center gap-3 text-gray-700">
                           <Phone className="h-4 w-4 text-green-500" />
-                          <span className="text-xs font-medium">{pegawai.kontak ?? "-"}</span>
+                          <span className="text-xs font-medium">{pegawai.kontak ?? "Belum Diset"}</span>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
-                      <Badge className="text-xs px-3 py-1 rounded-lg font-semibold">{pegawai.jenis_kelamin}</Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
                       <Badge className={`text-xs px-3 py-1 rounded-lg font-semibold ${getBadgeColor(pegawai.status)}`}>{pegawai.status}</Badge>
                     </TableCell>
-                    {/* <TableCell className="text-center">Role User</TableCell> */}
                     <TableCell className="text-center">
                       <div className="flex justify-center items-center gap-2">
                         <Tooltip>
@@ -191,7 +185,7 @@ export default function PegawaiPage() {
                         </Tooltip>
                         <Tooltip>
                           <PegawaiDialog
-                            title="Edit Data Pegawai"
+                            title="Perbarui Data Pegawai"
                             trigger={
                               <TooltipTrigger asChild>
                                 <Button variant="default" size="icon-sm" className="bg-yellow-500 hover:bg-yellow-700">

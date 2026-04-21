@@ -4,6 +4,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CreateSampel, CreateSampelSchema, EditSampel, EditSampelSchema } from "@/lib/schemas/sampel";
 import { Laboratorium } from "@/types/laboratorium";
 import { Permohonan } from "@/types/permohonan";
@@ -33,6 +34,7 @@ export default function SampelForm({ onSubmit, defaultValues, isEditMode, labora
       spesies: "",
       jumlah: 0,
       satuan: "",
+      kondisi: "",
       lab_id: 0,
       tanggal_pengujian: "",
       ...defaultValues,
@@ -145,7 +147,7 @@ export default function SampelForm({ onSubmit, defaultValues, isEditMode, labora
               </div>
 
               {/* Row 2: Jumlah & Satuan */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <Controller
                   name="jumlah"
                   control={form.control}
@@ -172,8 +174,44 @@ export default function SampelForm({ onSubmit, defaultValues, isEditMode, labora
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field>
-                      <FieldLabel htmlFor="satuan">Satuan Komoditas</FieldLabel>
-                      <Input {...field} id="satuan" type="text" placeholder="" aria-invalid={fieldState.invalid} required />
+                      <FieldLabel htmlFor="satuan">Satuan</FieldLabel>
+                      <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih satuan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Ekor">Ekor</SelectItem>
+                          <SelectItem value="Kilogram">Kilogram</SelectItem>
+                          <SelectItem value="Buah">Buah</SelectItem>
+                          <SelectItem value="Butir">Butir</SelectItem>
+                          <SelectItem value="Batang">Batang</SelectItem>
+                          <SelectItem value="Lembar">Lembar</SelectItem>
+                          <SelectItem value="Liter">Liter</SelectItem>
+                          <SelectItem value="Kemasan">Kemasan</SelectItem>
+                          <SelectItem value="Meter Kubik">Meter Kubik</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.error && <FieldError errors={[fieldState.error]} />}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="kondisi"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="kondisi">Kondisi</FieldLabel>
+                      <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih kondisi sampel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Segar">Segar</SelectItem>
+                          <SelectItem value="Beku">Beku</SelectItem>
+                          <SelectItem value="Hidup">Hidup</SelectItem>
+                          <SelectItem value="Baik/Sesuai">Baik/Sesuai</SelectItem>
+                        </SelectContent>
+                      </Select>
                       {fieldState.error && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}

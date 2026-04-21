@@ -34,14 +34,14 @@ import {
   TestTubeDiagonal,
   Trash2,
 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../auth-provider";
 
 export default function DetailSampel() {
+  const router = useRouter()
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [sampel, setSampel] = useState<Sampel>();
@@ -90,23 +90,24 @@ export default function DetailSampel() {
     }
   }, []);
 
+  const fetchSampel = useCallback(async () => {
+     setLoading(true);
+     try {
+       const result = await getSampelById(Number(id));
+       setSampel(result);
+     } catch (error) {
+       console.error(error);
+     } finally {
+       setLoading(false);
+     }
+  }, [id]);
+
   useEffect(() => {
-    const fetchSampel = async () => {
-      setLoading(true);
-      try {
-        const result = await getSampelById(Number(id));
-        setSampel(result);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchSampel();
     fetchParameter();
     fetchPegawai();
     fetchHasilUji();
-  }, [fetchHasilUji, fetchPegawai, fetchParameter, id]);
+  }, [fetchSampel,fetchHasilUji, fetchPegawai, fetchParameter, id]);
 
   const filteredParameters = parameter.filter((param) => param.klasifikasi_parameter === sampel?.laboratorium?.klasifikasi);
 
@@ -244,7 +245,7 @@ export default function DetailSampel() {
           </div>
 
           <div className="flex items-center gap-2">
-            {(!isAllSampelFinished || hasil.length == 0) && (
+            {!sampel?.tanggal_penandatanganan && (
               <HasilUjiDialog
                 title="Tambah Data Hasil Uji"
                 trigger={
@@ -271,7 +272,7 @@ export default function DetailSampel() {
                     Buat Kesimpulan
                   </Button>
                 }
-                onSuccess={fetchHasilUji}
+                onSuccess={() => fetchSampel()}
               />
             )}
 
@@ -336,7 +337,7 @@ export default function DetailSampel() {
                             <>
                               <Tooltip>
                                 <HasilUjiDialog
-                                  title="Tambah Data Hasil Uji"
+                                  title="Perbarui Data Hasil Uji"
                                   trigger={
                                     <TooltipTrigger asChild>
                                       <Button variant="default" size="icon-sm" className="bg-yellow-500 hover:bg-yellow-700">

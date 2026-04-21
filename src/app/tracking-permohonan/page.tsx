@@ -231,10 +231,10 @@ export default function TrackingPermohonan() {
                                       <span className="text-muted-foreground text-xs">Satuan</span>
                                       <p className="font-medium text-foreground">{hasil.parameter?.satuan_parameter}</p>
                                     </div>
-                                    <div className="space-y-1">
+                                    {/* <div className="space-y-1">
                                       <span className="text-muted-foreground text-xs">Hasil</span>
                                       <p className="font-medium">{hasil.hasil || "Proses Pengujian"}</p>
-                                    </div>
+                                    </div> */}
                                   </div>
                                 </CardContent>
                               </Card>
