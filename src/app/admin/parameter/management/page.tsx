@@ -5,16 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ParameterForm from "@/components/admin/parameter/parameter-form";
 import { Laboratorium, PaginatedLaboratorium } from "@/types/laboratorium";
 import { CreateParameter, EditParameter } from "@/lib/schemas/parameter";
-import {
-  createParameter,
-  getParameterById,
-  updateParameter,
-} from "@/services/parameterService";
+import { createParameter, getParameterById, updateParameter } from "@/services/parameterService";
 import { getLaboratorium } from "@/services/laboratoriumService";
 import { toast } from "sonner";
 import { LoadingOverlay } from "@/components/admin/loading-data";
+import { useAuth } from "../../auth-provider";
 
 export default function ManagementParameterPage() {
+  const { user, logout } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -49,8 +47,12 @@ export default function ManagementParameterPage() {
       }
     };
 
-    fetchData();
-  }, [id, isEditMode]);
+    if (user?.role !== "superadmin") {
+      logout("/forbidden");
+    } else {
+      fetchData();
+    }
+  }, [id, isEditMode, logout, user?.role]);
 
   const handleSubmit = async (data: CreateParameter | EditParameter) => {
     setLoading(true);
@@ -70,7 +72,7 @@ export default function ManagementParameterPage() {
   };
 
   if (loading) {
-    return <LoadingOverlay text="Memuat data..."/>;
+    return <LoadingOverlay text="Memuat data..." />;
   }
 
   return (

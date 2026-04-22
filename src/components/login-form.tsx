@@ -44,9 +44,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      console.log(data);
-
-      router.push("/admin/pegawai");
+      router.push("/admin/permohonan");
     } catch (err) {
       setError("Terjadi kesalahan koneksi");
     }

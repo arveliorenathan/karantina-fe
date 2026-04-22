@@ -10,9 +10,11 @@ import { PaginatedPegawai, Pegawai } from "@/types/pegawai";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "../../auth-provider";
 
 export default function ManagementPermohonanPage() {
   const router = useRouter();
+  const { user, logout } = useAuth();
   const searchParams = useSearchParams();
 
   const id = searchParams.get("id");
@@ -66,8 +68,12 @@ export default function ManagementPermohonanPage() {
       }
     };
 
-    fetchData();
-  }, [id, isEditMode]);
+    if (user?.role !== "admin") {
+      logout("/forbidden");
+    } else {
+      fetchData();
+    }
+  }, [id, isEditMode, logout, user?.role]);
 
   const handleSubmit = async (data: CreatePermohonan | EditPermohonan) => {
     setLoading(true);
@@ -87,8 +93,8 @@ export default function ManagementPermohonanPage() {
   };
 
   if (loading) {
-      return <LoadingOverlay text="Memuat data..." />;
-    }
+    return <LoadingOverlay text="Memuat data..." />;
+  }
 
   return (
     <PermohonanForm

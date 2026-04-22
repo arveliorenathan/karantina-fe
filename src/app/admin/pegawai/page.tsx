@@ -27,7 +27,7 @@ import { useAuth } from "../auth-provider";
 import { useRouter } from "next/navigation";
 
 export default function PegawaiPage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const [pegawai, setPegawai] = useState<Pegawai[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,12 +59,12 @@ export default function PegawaiPage() {
   }, []);
 
   useEffect(() => {
-    if (user?.role !== "superadmin") {
-      router.replace("/forbidden");
+    if (user?.role !== "admin") {
+      logout("/forbidden");
     } else {
       fetchPegawai(1, search || undefined, status === "all" ? undefined : status);
     }
-  }, [search, status, fetchPegawai, user?.role, router]);
+  }, [search, status, fetchPegawai, user?.role, router, logout]);
 
   const getBadgeColor = (status: string) => {
     switch (status) {

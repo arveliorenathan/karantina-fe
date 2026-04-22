@@ -25,7 +25,7 @@ import { useAuth } from "../auth-provider";
 import { useRouter } from "next/navigation";
 
 export default function Verifikasi() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [klasifikasi, setKlasifikasi] = useState("");
@@ -62,9 +62,9 @@ export default function Verifikasi() {
 
   useEffect(() => {
     if (user?.role !== "analis" && user?.role !== "superadmin") {
-      router.replace("/forbidden");
+      logout("/forbidden");
     }
-  }, [search, klasifikasi, user?.role, router]);
+  }, [search, klasifikasi, user?.role, router, logout]);
 
   return (
     <div className="space-y-4">

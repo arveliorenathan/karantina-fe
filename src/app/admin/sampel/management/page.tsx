@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useAuth } from "../../auth-provider";
 
 export default function ManagementSampel() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -66,11 +66,11 @@ export default function ManagementSampel() {
     };
 
     if (user?.role !== "superadmin" && user?.role !== "admin") {
-      router.replace("/forbidden");
+      logout("/forbidden");
     } else {
       fetchData();
     }
-  }, [id, isEditMode, router, user?.role]);
+  }, [id, isEditMode, logout, router, user?.role]);
 
   const handleSubmit = async (data: CreateSampel | EditSampel) => {
     setLoading(true);

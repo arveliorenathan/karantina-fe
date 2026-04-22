@@ -27,7 +27,7 @@ import { useAuth } from "../auth-provider";
 
 export default function PNBP() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [pnbp, setPnbp] = useState<Pnbp[]>([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -72,11 +72,11 @@ export default function PNBP() {
 
   useEffect(() => {
     if (user?.role !== "superadmin" && user?.role !== "pnbp") {
-      router.replace("/forbidden");
+      logout("/forbidden");
     } else {
       fetchPNBP(1, search || undefined, status === "all" ? undefined : status);
     }
-  }, [search, status, fetchPNBP, user?.role, router]);
+  }, [search, status, fetchPNBP, user?.role, router, logout]);
 
   return (
     <div className="space-y-8">

@@ -13,7 +13,7 @@ interface AuthContextType {
   token: string | null;
   user: User | null;
   setAuth: (token: string, user: User) => void;
-  logout: () => void;
+  logout: (redirectTo?: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -50,13 +50,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserState(u);
   };
 
-  const logout = () => {
+  const logout = (redirectTo: string = "/login") => {
     if (!mounted) return;
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setTokenState(null);
     setUserState(null);
-    router.push("/login");
+    router.push(redirectTo);
   };
 
   if (!mounted) return null;
