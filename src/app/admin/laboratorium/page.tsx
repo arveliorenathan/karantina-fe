@@ -25,8 +25,12 @@ import { Laboratorium, PaginatedLaboratorium } from "@/types/laboratorium";
 import { PaginatedPegawai, Pegawai } from "@/types/pegawai";
 import { SearchIcon, UserPlus, Pencil, Trash2, ListFilter, Eye } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function LaboratoriumPage() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [laboratorium, setLaboratorium] = useState<Laboratorium[]>([]);
   const [pegawai, setPegawai] = useState<Pegawai[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,9 +79,13 @@ export default function LaboratoriumPage() {
   }, []);
 
   useEffect(() => {
-    fetchLaboratorium(1, search, status, klasifikasi);
-    fetchPegawai();
-  }, [search, status, klasifikasi, fetchLaboratorium, fetchPegawai]);
+    if (user?.role !== "superadmin") {
+      router.replace("/forbidden");
+    } else {
+      fetchLaboratorium(1, search, status, klasifikasi);
+      fetchPegawai();
+    }
+  }, [search, status, klasifikasi, fetchLaboratorium, fetchPegawai, user?.role, router]);
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {

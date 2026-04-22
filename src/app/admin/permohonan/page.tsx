@@ -24,8 +24,10 @@ import { PaginatedPermohonan, Permohonan } from "@/types/permohonan";
 import { Building, Eye, FileText, MoreHorizontal, Pencil, PlusCircle, QrCode, SearchIcon, Trash2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../auth-provider";
 
 export default function PermohonanPage() {
+  const { user } = useAuth();
   const [permohonan, setPermohonan] = useState<Permohonan[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -337,29 +339,33 @@ export default function PermohonanPage() {
                                 <span>Detail Permohonan</span>
                               </DropdownMenuItem>
 
-                              <DropdownMenuItem
-                                className="gap-2 cursor-pointer"
-                                disabled={permohonan.status == "Selesai"}
-                                onClick={() => router.push(`/admin/permohonan/management?id=${permohonan.id}`)}>
-                                <Pencil className="h-4 w-4" />
-                                <span>Edit Permohonan</span>
-                              </DropdownMenuItem>
+                              {(user?.role === "superadmin" || user?.role === "admin") && (
+                                <>
+                                  <DropdownMenuItem
+                                    className="gap-2 cursor-pointer"
+                                    disabled={permohonan.status == "Selesai"}
+                                    onClick={() => router.push(`/admin/permohonan/management?id=${permohonan.id}`)}>
+                                    <Pencil className="h-4 w-4" />
+                                    <span>Edit Permohonan</span>
+                                  </DropdownMenuItem>
 
-                              <DropdownMenuSeparator />
+                                  <DropdownMenuSeparator />
 
-                              <div onClick={(e) => e.stopPropagation()}>
-                                <DeleteDialog
-                                  trigger={
-                                    <div className="flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 hover:bg-red-700 hover:text-white  cursor-pointer rounded-sm w-full">
-                                      <Trash2 className="h-4 w-4" />
-                                      <span>Hapus Permohonan</span>
-                                    </div>
-                                  }
-                                  endpoint={`/permohonan/${permohonan.id}`}
-                                  successMessage="Data permohonan berhasil dihapus"
-                                  onSuccess={() => fetchPermohonan(pagination.current_page)}
-                                />
-                              </div>
+                                  <div onClick={(e) => e.stopPropagation()}>
+                                    <DeleteDialog
+                                      trigger={
+                                        <div className="flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 hover:bg-red-700 hover:text-white  cursor-pointer rounded-sm w-full">
+                                          <Trash2 className="h-4 w-4" />
+                                          <span>Hapus Permohonan</span>
+                                        </div>
+                                      } 
+                                      endpoint={`/permohonan/${permohonan.id}`}
+                                      successMessage="Data permohonan berhasil dihapus"
+                                      onSuccess={() => fetchPermohonan(pagination.current_page)}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>

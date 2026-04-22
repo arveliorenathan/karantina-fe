@@ -22,9 +22,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getTarif } from "@/services/tarifService";
 import { PaginatedTarif, Tarif } from "@/types/tarif";
 import { ListFilter, Pencil, PlusCircle, SearchIcon, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../../auth-provider";
 
 export default function DataLayanan() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [tarif, setTarif] = useState<Tarif[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -55,8 +59,12 @@ export default function DataLayanan() {
   }, []);
 
   useEffect(() => {
-    fetchTarif(1, search || undefined, klasifikasi === "all" ? undefined : klasifikasi);
-  }, [search, klasifikasi, fetchTarif]);
+    if (user?.role !== "superadmin") {
+      router.replace("/forbidden");
+    } else {
+      fetchTarif(1, search || undefined, klasifikasi === "all" ? undefined : klasifikasi);
+    }
+  }, [search, klasifikasi, fetchTarif, user?.role, router]);
 
   const getKlasifikasiBadgeColor = (klasifikasi: string) => {
     switch (klasifikasi) {

@@ -20,9 +20,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getSampel } from "@/services/sampelService";
 import { PaginatedSampel, Sampel } from "@/types/sampel";
 import { Eye, ListFilter, SearchIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "../auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function Verifikasi() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [klasifikasi, setKlasifikasi] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,6 +59,12 @@ export default function Verifikasi() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user?.role !== "analis" && user?.role !== "superadmin") {
+      router.replace("/forbidden");
+    }
+  }, [search, klasifikasi, user?.role, router]);
 
   return (
     <div className="space-y-4">

@@ -23,9 +23,11 @@ import { PaginatedPNBP, Pnbp } from "@/types/pnbp";
 import { ListFilter, Pencil, PlusCircle, Receipt, SearchIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../auth-provider";
 
 export default function PNBP() {
   const router = useRouter();
+  const { user } = useAuth();
   const [pnbp, setPnbp] = useState<Pnbp[]>([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -69,8 +71,12 @@ export default function PNBP() {
   };
 
   useEffect(() => {
-    fetchPNBP(1, search || undefined, status === "all" ? undefined : status);
-  }, [search, status, fetchPNBP]);
+    if (user?.role !== "superadmin" && user?.role !== "pnbp") {
+      router.replace("/forbidden");
+    } else {
+      fetchPNBP(1, search || undefined, status === "all" ? undefined : status);
+    }
+  }, [search, status, fetchPNBP, user?.role, router]);
 
   return (
     <div className="space-y-8">

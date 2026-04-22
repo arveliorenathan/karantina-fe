@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUserState] = useState<User | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Jalankan efek hanya untuk mount client
   useEffect(() => {
     const initAuth = () => {
       const storedToken = localStorage.getItem("token");
@@ -34,19 +33,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (storedToken) setTokenState(storedToken);
       if (storedUser) setUserState(JSON.parse(storedUser));
 
-      // redirect jika tidak ada token
-      if (!storedToken) router.push("/forbiden");
+      if (!storedToken) router.push("/forbidden");
 
       setMounted(true);
     };
 
-    // jalankan di next tick agar React tidak menandainya sebagai "synchronous setState"
     const timer = setTimeout(initAuth, 0);
     return () => clearTimeout(timer);
   }, [router]);
 
   const setAuth = (t: string, u: User) => {
-    if (!mounted) return; // aman, hanya client
+    if (!mounted) return;
     localStorage.setItem("token", t);
     localStorage.setItem("user", JSON.stringify(u));
     setTokenState(t);

@@ -12,23 +12,20 @@ export async function getTarif(params?: { search?: string; page?: number; klasif
         limit: params?.limit,
       },
     });
-    console.log("Data tarif: ", response.data);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data tarif");
-    console.log("Error GET Tarif: ", error);
-    throw new Error("Error GET Tarif");
+    throw error;
   }
 }
 
 export async function getTarifById(id: number) {
   try {
     const response = await api.get(`/tarif/${id}`);
-    console.log(`Data tarif by id ${id}`, response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data tarif by id");
-    console.log("Error GET Tarif by ID: ", error);
+    throw error;
   }
 }
 
@@ -39,7 +36,7 @@ export async function createTarif(data: Omit<Tarif, "id" | "kelompok_pengujian" 
     return response.data.data;
   } catch (error) {
     toast.error("Gagal membuat data tarif");
-    console.log("Error POST Tarif: ", error);
+    throw error;
   }
 }
 
@@ -50,7 +47,7 @@ export async function updateTarif(id: number, data: Partial<Tarif>) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal memperbaharui data tarif");
-    console.log("Error PATCH Tarif: ", error);
+    throw error;
   }
 }
 
@@ -60,6 +57,6 @@ export async function deleteTarif(id: number) {
     toast.success("Data tarif berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data tarif");
-    console.log("Error DELETE Tarif: ", error);
+    throw error;
   }
 }

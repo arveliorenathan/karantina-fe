@@ -29,23 +29,20 @@ export async function getPermohonan(params?: {
         limit: params?.limit,
       },
     });
-    console.log("Data permohonan: ", response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data pegawai");
-    console.log("Error GET Pegawai: ", error);
-    throw new Error("Error GET Pegawai");
+    throw error;
   }
 }
 
 export async function getPermohonanById(id: number) {
   try {
     const response = await api.get(`/permohonan/${id}`);
-    console.log(`Data permohonan by id ${id}: `, response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data permohonan by id");
-    console.log("Error GET Permohonan by ID: ", error);
+    throw error;
   }
 }
 
@@ -56,7 +53,7 @@ export async function createPermohonan(data: Omit<Permohonan, "id" | "kode_permo
     return response.data.data;
   } catch (error) {
     toast.error("Gagal menambah data permohonan");
-    console.log("Error POST Permohonan: ", error);
+    throw error;
   }
 }
 
@@ -67,7 +64,7 @@ export async function updatePermohonan(id: number, data: Partial<Permohonan>) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal memperbaharui data permohonan");
-    console.log("Error PATCH Permohonan:", error);
+    throw error;
   }
 }
 
@@ -77,6 +74,6 @@ export async function deletePermohonan(id: number) {
     toast.success("Data permohonan berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data permohonan");
-    console.log("Error DELETE Permohonan:", error);
+    throw error;
   }
 }

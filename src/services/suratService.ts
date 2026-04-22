@@ -5,7 +5,7 @@ import { toast } from "sonner";
 export async function getSurat(params?: {
   search?: string;
   page?: number;
-  permohonan_id?: string;
+  permohonan_id?: number;
   perihal?: string;
   limit?: number;
 }): Promise<PaginatedSurat> {
@@ -19,23 +19,20 @@ export async function getSurat(params?: {
         perihal: params?.perihal,
       },
     });
-    console.log("Data surat: ", response.data);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data surat");
-    console.log("Error GET Surat: ", error);
-    throw new Error("Error GET Parameter");
+    throw error;
   }
 }
 
 export async function getSuratById(id: number) {
   try {
     const response = await api.get(`/surat/${id}`);
-    console.log(`Data surat by id ${id}`, response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data surat by id");
-    console.log("Error GET Surat by ID: ", error);
+    throw error;
   }
 }
 
@@ -48,7 +45,7 @@ export async function createSurat(
     return response.data.data;
   } catch (error) {
     toast.error("Gagal membuat data surat");
-    console.log("Error POST Surat: ", error);
+    throw error;
   }
 }
 
@@ -59,7 +56,7 @@ export async function updateSurat(id: number, data: Partial<Surat>) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal memperbaharui data surat");
-    console.log("Error PATCH Surat: ", error);
+    throw error;
   }
 }
 
@@ -69,6 +66,6 @@ export async function deleteSurat(id: number) {
     toast.success("Data surat berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data surat");
-    console.log("Error DELETE Surat: ", error);
+    throw error;
   }
 }

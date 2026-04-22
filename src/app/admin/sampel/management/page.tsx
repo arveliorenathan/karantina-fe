@@ -10,8 +10,10 @@ import { PaginatedPermohonan, Permohonan } from "@/types/permohonan";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "../../auth-provider";
 
 export default function ManagementSampel() {
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -62,8 +64,13 @@ export default function ManagementSampel() {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [id, isEditMode]);
+
+    if (user?.role !== "superadmin" && user?.role !== "admin") {
+      router.replace("/forbidden");
+    } else {
+      fetchData();
+    }
+  }, [id, isEditMode, router, user?.role]);
 
   const handleSubmit = async (data: CreateSampel | EditSampel) => {
     setLoading(true);

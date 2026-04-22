@@ -19,23 +19,20 @@ export async function getParameter(params?: {
         limit: params?.limit,
       },
     });
-    console.log("Data parameter: ", response.data.data);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data parameter");
-    console.log("Error GET parameter", error);
-    throw new Error("Error GET Parameter");
+    throw error;
   }
 }
 
 export async function getParameterById(id: number) {
   try {
     const response = await api.get(`/parameter/${id}`);
-    console.log(`Data parameter by id ${id}: `, response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data parameter");
-    console.log("Error GET parameter by id", error);
+    throw error;
   }
 }
 
@@ -48,7 +45,7 @@ export async function createParameter(
     return response.data.data;
   } catch (error) {
     toast.error("Gagal menambah data parameter");
-    console.log("Error POST parameter", error);
+    throw error;
   }
 }
 
@@ -59,7 +56,7 @@ export async function updateParameter(id: number, data: Partial<Parameter>) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal memperbaharui data parameter");
-    console.log("Error PATCH parameter", error);
+    throw error;
   }
 }
 
@@ -69,6 +66,6 @@ export async function deleteParameter(id: number) {
     toast.success("Data parameter berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data parameter");
-    console.log("Error DELETE parameter", error);
+    throw error;
   }
 }

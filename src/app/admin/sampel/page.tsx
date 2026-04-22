@@ -18,15 +18,15 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getSampel } from "@/services/sampelService";
 import { getSurat } from "@/services/suratService";
 import { PaginatedSampel, Sampel } from "@/types/sampel";
-import { PaginatedSurat, Surat } from "@/types/surat";
+import { PaginatedSurat } from "@/types/surat";
 
 import { ClipboardList, Eye, Pencil, Plus, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function SampelPage() {
   const [sampel, setSampel] = useState<Sampel[]>([]);
-  const [surat, setSurat] = useState<Surat[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -57,25 +57,24 @@ export default function SampelPage() {
     }
   }, []);
 
-  const fetchSurat = useCallback(async (page: number, permohonan_id: string) => {
-    setLoading(true);
+  const handleCetak = async (sampelId: number, permohonan_id?: number) => {
     try {
       const result: PaginatedSurat = await getSurat({
-        page,
         permohonan_id: permohonan_id,
         perihal: "Laporan Hasil Uji Laboratorium",
       });
-      setSurat(result.data);
-      setPagination({
-        current_page: result.current_page,
-        last_page: result.last_page,
-      });
-    } catch (error) {
-      console.error("Error fetch permohonan:", error);
-    } finally {
-      setLoading(false);
+
+      if (result.data.length === 0) {
+        toast.error("Surat tugas untuk Laporan Hasil Uji belum dibuat.");
+        return;
+      }
+
+      router.push(`/pdf/hasil-uji-preview?id=${sampelId}`);
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat memeriksa surat.");
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchSampel(1, query.search || undefined);
@@ -167,11 +166,8 @@ export default function SampelPage() {
                             <Button
                               variant="default"
                               size="icon-sm"
-                              disabled={
-                                !sampel.tanggal_penandatanganan &&
-                                !surat.some((s) => s.perihal === "Laporan Pengujian" && s.permohonan?.kode_permohonan === sampel.kode_sampel)
-                              }
-                              onClick={() => router.push(`/pdf/hasil-uji-preview?id=${sampel.id}`)}>
+                              disabled={!sampel.tanggal_penandatanganan}
+                              onClick={() => handleCetak(sampel.id, sampel.permohonan?.id)}>
                               <ClipboardList className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>

@@ -12,23 +12,20 @@ export async function getPNBP(params?: { search?: string; page?: number; status?
         limit: params?.limit,
       },
     });
-    console.log("Data PNBP: ", response.data);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data PNBP");
-    console.log("Error GET PNBP: ", error);
-    throw new Error("Error GET PNBP");
+    throw error;
   }
 }
 
 export async function getPNBPById(id: number) {
   try {
     const response = await api.get(`/pnbp/${id}`);
-    console.log(`Data PNBP by id ${id}`, response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data PNBP by id");
-    console.log("Error GET PNBP by ID: ", error);
+    throw error;
   }
 }
 
@@ -39,7 +36,7 @@ export async function createPNBP(data: Omit<Pnbp, "id" | "no_pnbp" | "no_bil" | 
     return response.data.data;
   } catch (error) {
     toast.error("Gagal membuat data PNBP");
-    console.log("Error POST PNBP: ", error);
+    throw error;
   }
 }
 
@@ -50,7 +47,7 @@ export async function updatePNBP(id: number, data: Partial<Pnbp>) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal memperbaharui data PNBP");
-    console.log("Error PATCH PNBP: ", error);
+    throw error;
   }
 }
 
@@ -60,6 +57,6 @@ export async function deletePNBP(id: number) {
     toast.success("Data PNBP berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data PNBP");
-    console.log("Error DELETE PNBP: ", error);
+    throw error;
   }
 }

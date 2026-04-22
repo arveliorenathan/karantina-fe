@@ -17,23 +17,20 @@ export async function getPegawai(params?: {
         limit: params?.limit
       },
     });
-    console.log("Data pegawai : ", response.data.data);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data pegawai");
-    console.log("Error GET Pegawai: ", error);
-    throw new Error("Error GET Pegawai");
+    throw error;
   }
 }
 
 export async function getPegawaiById(id: number) {
   try {
     const response = await api.get(`/pegawai/${id}`);
-    console.log(`Data pegawai by id ${id}: `, response);
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data pegawai by id");
-    console.log("Error GET Pegawai by ID: ", error);
+    throw error;
   }
 }
 
@@ -46,7 +43,7 @@ export async function createPegawai(
     return response.data.data;
   } catch (error) {
     toast.error("Gagal menambah data pegawai");
-    console.log("Error POST Pegawai: ", error);
+    throw error;
   }
 }
 
@@ -57,7 +54,7 @@ export async function updatePegawai(id: number, data: Partial<Pegawai>) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal memperbarui data pegawai");
-    console.log("Error PATCH Pegawai: ", error);
+    throw error;
   }
 }
 
@@ -67,6 +64,6 @@ export async function deletePegawai(id: number) {
     toast.success("Data pegawai berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menhapus data pegawai");
-    console.log("Error DELETE Pegawai: ", error);
+    throw error;
   }
 }

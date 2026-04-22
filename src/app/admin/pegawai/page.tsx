@@ -23,8 +23,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useAuth } from "../auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function PegawaiPage() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [pegawai, setPegawai] = useState<Pegawai[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -55,8 +59,12 @@ export default function PegawaiPage() {
   }, []);
 
   useEffect(() => {
-    fetchPegawai(1, search || undefined, status === "all" ? undefined : status);
-  }, [search, status, fetchPegawai]);
+    if (user?.role !== "superadmin") {
+      router.replace("/forbidden");
+    } else {
+      fetchPegawai(1, search || undefined, status === "all" ? undefined : status);
+    }
+  }, [search, status, fetchPegawai, user?.role, router]);
 
   const getBadgeColor = (status: string) => {
     switch (status) {

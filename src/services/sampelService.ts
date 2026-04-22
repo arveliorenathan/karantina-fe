@@ -22,8 +22,7 @@ export async function getSampel(params?: {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data sampel");
-    console.error("Error GET Sampel: ", error);
-    throw new Error("Error GET Parameter");
+    throw error;
   }
 }
 
@@ -33,7 +32,7 @@ export async function getSampelById(id: number) {
     return response.data.data;
   } catch (error) {
     toast.error("Gagal mengambil data sampel by id");
-    console.error("Error GET Sampel by ID: ", error);
+    throw error;
   }
 }
 
@@ -43,7 +42,7 @@ export async function createSampel(data: Omit<Sampel, "id" | "kode_sampel" | "cr
     toast.success("Data sampel berhasil ditambahkan");
     return response.data.data;
   } catch (error) {
-    console.error("Error POST Sampel: ", error);
+    toast.error("Gagal menambahkan data sampel by id");
     throw error;
   }
 }
@@ -54,7 +53,7 @@ export async function updateSampel(id: number, data: Partial<Sampel>) {
     toast.success("Data sampel berhasil diperbarui");
     return response.data.data;
   } catch (error) {
-    console.error("Error PATCH Sampel: ", error);
+    toast.error("Gagal memperbarui data sampel by id");
     throw error;
   }
 }
@@ -65,6 +64,6 @@ export async function deleteSampel(id: number) {
     toast.success("Data sampel berhasil dihapus");
   } catch (error) {
     toast.error("Gagal menghapus data sampel");
-    console.error("Error DELETE Sampel: ", error);
+    throw error;
   }
 }
