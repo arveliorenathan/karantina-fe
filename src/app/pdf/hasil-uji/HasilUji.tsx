@@ -7,16 +7,16 @@ import { getSurat } from "@/services/suratService";
 import { Sampel } from "@/types/sampel";
 import { Surat } from "@/types/surat";
 import { PDFViewer } from "@react-pdf/renderer";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface LembarHasilUjiProps {
-  id?: string;
-}
-
-export default function LembarHasilUji({ id }: LembarHasilUjiProps) {
+export default function LembarHasilUji() {
   const [sampel, setSampel] = useState<Sampel | null>(null);
   const [surat, setSurat] = useState<Surat[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const hashedId = searchParams.get("id");
+  const id = hashedId ? Number(atob(decodeURIComponent(hashedId))) : null;
 
   useEffect(() => {
     if (!id) return;

@@ -13,9 +13,9 @@ export default function PreviewLembarHasilUji() {
   const [sampel, setSampel] = useState<Sampel | null>(null);
   const [surat, setSurat] = useState<Surat[]>([]);
   const [loading, setLoading] = useState(true);
-
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const hashedId = searchParams.get("id");
+  const id = hashedId ? Number(atob(decodeURIComponent(hashedId))) : null;
 
   useEffect(() => {
     if (!id) return;

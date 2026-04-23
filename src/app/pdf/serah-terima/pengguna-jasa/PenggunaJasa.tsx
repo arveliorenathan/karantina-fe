@@ -11,7 +11,8 @@ import { useEffect, useState } from "react";
 export default function SerahTerimaPenggunaJasaPage() {
   const [permohonan, setPermohonan] = useState<Permohonan | null>(null);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const hashedId = searchParams.get("id");
+  const id = hashedId ? Number(atob(decodeURIComponent(hashedId))) : null;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

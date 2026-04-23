@@ -14,7 +14,8 @@ export default function SerahTerimaPetugasPage() {
   const [permohonan, setPermohonan] = useState<Permohonan | null>(null);
   const [surat, setSurat] = useState<Surat[]>([]);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const hashedId = searchParams.get("id");
+  const id = hashedId ? Number(atob(decodeURIComponent(hashedId))) : null;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

@@ -84,7 +84,8 @@ export default function PermohonanPage() {
         return;
       }
 
-      router.push(`/pdf/hasil-uji-preview?id=${permohonanId}`);
+      const hashedId = btoa(String(permohonanId));
+      router.push(`/pdf/hasil-uji-preview?id=${encodeURIComponent(hashedId)}`);
     } catch (err) {
       console.error(err);
       alert("Terjadi kesalahan saat memeriksa surat.");
@@ -331,7 +332,10 @@ export default function PermohonanPage() {
                               <DropdownMenuItem
                                 className="gap-2 cursor-pointer"
                                 disabled={permohonan.sampel?.length === 0 || permohonan?.sampel?.every((sampel) => sampel.hasil_uji?.length === 0)}
-                                onClick={() => router.push(`/pdf/serah-terima/pengguna-jasa?id=${permohonan.id}`)}>
+                                onClick={() => {
+                                  const hashedId = btoa(String(permohonan.id));
+                                  router.push(`/pdf/serah-terima/pengguna-jasa?id=${encodeURIComponent(hashedId)}`);
+                                }}>
                                 <FileText className="h-4 w-4" />
                                 <span>Berita Acara (Pengguna Jasa)</span>
                               </DropdownMenuItem>

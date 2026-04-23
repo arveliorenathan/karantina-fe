@@ -68,7 +68,7 @@ export default function ManagementPermohonanPage() {
       }
     };
 
-    if (user?.role !== "admin") {
+    if (user?.role !== "admin" && user?.role !== "superadmin") {
       logout("/forbidden");
     } else {
       fetchData();

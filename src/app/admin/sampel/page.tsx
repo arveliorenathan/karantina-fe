@@ -69,7 +69,8 @@ export default function SampelPage() {
         return;
       }
 
-      router.push(`/pdf/hasil-uji-preview?id=${sampelId}`);
+      const hashedId = btoa(String(sampelId));
+      router.push(`/pdf/hasil-uji-preview?id=${encodeURIComponent(hashedId)}`);
     } catch (err) {
       console.error(err);
       alert("Terjadi kesalahan saat memeriksa surat.");

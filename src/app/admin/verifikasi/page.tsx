@@ -52,7 +52,7 @@ export default function Verifikasi() {
         current_page: result.current_page,
         last_page: result.last_page,
       });
-      setShowTable(true); // tampilkan tabel setelah fetch
+      setShowTable(true);
     } catch (error) {
       console.error("Error fetch permohonan:", error);
     } finally {

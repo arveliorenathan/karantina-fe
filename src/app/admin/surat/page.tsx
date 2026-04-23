@@ -132,7 +132,12 @@ export default function SuratPage() {
                         <div className="flex justify-center items-center gap-2">
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button size="icon-sm" onClick={() => router.push(`/pdf/surat-tugas?id=${surat.id}`)}>
+                              <Button
+                                size="icon-sm"
+                                onClick={() => {
+                                  const hashedId = btoa(String(surat.id));
+                                  router.push(`/pdf/surat-tugas?id=${encodeURIComponent(hashedId)}`);
+                                }}>
                                 <FileText className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>

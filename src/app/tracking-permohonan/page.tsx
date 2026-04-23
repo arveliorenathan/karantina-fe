@@ -178,7 +178,10 @@ export default function TrackingPermohonan() {
                                 sampel.hasil_uji?.every((hasil) => hasil.status !== "Selesai") ||
                                 permohonan.pnbp?.every((pnbp) => pnbp.status !== "Sudah Dibayar")
                               }
-                              onClick={() => router.push(`/pdf/hasil-uji?id=${sampel.id}`)}>
+                              onClick={() => {
+                                const hashedId = btoa(String(sampel.id));
+                                router.push(`/pdf/hasil-uji?id=${encodeURIComponent(hashedId)}`);
+                              }}>
                               <Download />
                               Laporan Hasil Uji
                             </Button>
@@ -250,7 +253,9 @@ export default function TrackingPermohonan() {
                   <Alert className="bg-red-600 text-white">
                     <InfoIcon />
                     <AlertTitle>Silahkan Membayar PNBP Terlebih Dahulu</AlertTitle>
-                    <AlertDescription className="text-white">Pembayaran PNBP wajib dilakukan sebelum melanjutkan proses selanjutnya.</AlertDescription>
+                    <AlertDescription className="text-white">
+                      Pembayaran PNBP wajib dilakukan sebelum melanjutkan proses selanjutnya.
+                    </AlertDescription>
                   </Alert>
                 )}
               </CardContent>
