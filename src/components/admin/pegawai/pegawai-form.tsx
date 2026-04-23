@@ -114,7 +114,7 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel htmlFor="email">Email</FieldLabel>
-                  <Input {...field} id="email" type="email" placeholder="Contoh: example@gmail.com" aria-invalid={fieldState.invalid} required />
+                  <Input {...field} id="email" type="email" placeholder="Contoh: example@gmail.com" aria-invalid={fieldState.invalid} />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -126,7 +126,7 @@ export default function PegawaiForm({ defaultValue, onSubmit, loading, isEditMod
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel htmlFor="kontak">Kontak</FieldLabel>
-                  <Input {...field} id="kontak" type="text" placeholder="Contoh: 08..." aria-invalid={fieldState.invalid} required />
+                  <Input {...field} id="kontak" type="text" placeholder="Contoh: 08..." aria-invalid={fieldState.invalid} />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
