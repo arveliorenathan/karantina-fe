@@ -1,59 +1,18 @@
-"use client";
-
+import { Suspense } from "react";
 import { LoadingOverlay } from "@/components/admin/loading-data";
-import { HasilUjiPDF } from "@/components/pdf/hasil-uji/hasil-uji";
-import { getSampelById } from "@/services/sampelService";
-import { getSurat } from "@/services/suratService";
-import { Sampel } from "@/types/sampel";
-import { Surat } from "@/types/surat";
-import { PDFViewer } from "@react-pdf/renderer";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import LembarHasilUji from "./HasilUji";
 
-export default function LembarHasilUji() {
-  const [sampel, setSampel] = useState<Sampel | null>(null);
-  const [surat, setSurat] = useState<Surat[]>([]);
-  const [loading, setLoading] = useState(true);
+interface PageProps {
+  searchParams: Promise<{ id?: string }>;
+}
 
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
-  useEffect(() => {
-    if (!id) return;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        // Ambil sampel
-        const sampelResult = await getSampelById(Number(id));
-        setSampel(sampelResult);
-
-        if (sampelResult?.kode_permohonan) {
-          const suratResult = await getSurat({
-            permohonan_id: sampelResult.kode_permohonan,
-            perihal: "Laporan Hasil Uji Laboratorium",
-            limit: 0,
-          });
-          setSurat(suratResult.data);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
-  if (loading) {
-      return <LoadingOverlay text="Menampilkan PDF..." />;
-    }
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const id = params.id;
 
   return (
-    <PDFViewer style={{ width: "100%", height: "100vh" }}>
-      <HasilUjiPDF data={{ sampel, surat }} />
-    </PDFViewer>
+    <Suspense fallback={<LoadingOverlay text="Memuat data..." />}>
+      <LembarHasilUji id={id} />
+    </Suspense>
   );
 }

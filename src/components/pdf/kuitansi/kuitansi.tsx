@@ -56,14 +56,14 @@ export const Kuitansi = ({ data }: { data: { pnbp: Pnbp | null } }) => {
             <Text style={styles.label}>
               Pengguna Jasa/<Text style={{ fontStyle: "italic" }}>Service Users</Text>
             </Text>
-            <Text style={styles.data}>: {data?.pnbp?.permohonan.nama_perusahaan}</Text>
+            <Text style={styles.data}>: {data?.pnbp?.permohonan?.nama_perusahaan}</Text>
           </View>
 
           <View style={styles.biodataRow}>
             <Text style={styles.label}>
               Alamat/<Text style={{ fontStyle: "italic" }}>Address</Text>
             </Text>
-            <Text style={styles.data}>: {data?.pnbp?.permohonan.alamat}</Text>
+            <Text style={styles.data}>: {data?.pnbp?.permohonan?.alamat}</Text>
           </View>
 
           <View style={styles.biodataRow}>
@@ -77,7 +77,7 @@ export const Kuitansi = ({ data }: { data: { pnbp: Pnbp | null } }) => {
             <Text style={styles.label}>
               Kode Tracking/<Text style={{ fontStyle: "italic" }}>Tracking Kode</Text>
             </Text>
-            <Text style={styles.data}>: {data?.pnbp?.permohonan.kode_permohonan}</Text>
+            <Text style={styles.data}>: {data?.pnbp?.permohonan?.kode_permohonan}</Text>
           </View>
 
           <View style={styles.biodataRow}>
@@ -107,7 +107,7 @@ export const Kuitansi = ({ data }: { data: { pnbp: Pnbp | null } }) => {
             </TD>
           </TH>
 
-          {data?.pnbp?.tarif_layanan.map((data, index) => (
+          {data?.pnbp?.tarif_layanan?.map((data, index) => (
             <TR key={data.id}>
               <TD weighting={2} style={{ justifyContent: "flex-start", alignItems: "flex-start", flexWrap: "wrap" }}>
                 {index + 1}
@@ -145,8 +145,8 @@ export const Kuitansi = ({ data }: { data: { pnbp: Pnbp | null } }) => {
             <View style={styles.qrContainer}>
               <Logo src={generateQRCode(url)} style={{ width: 100, height: 100 }} />
             </View>
-            <Text style={styles.footerTextRight}>{data?.pnbp?.pegawai.nama_pegawai}</Text>
-            <Text style={styles.footerTextRight}>NIP. {data?.pnbp?.pegawai.nip}</Text>
+            <Text style={styles.footerTextRight}>{data?.pnbp?.pegawai?.nama_pegawai}</Text>
+            <Text style={styles.footerTextRight}>NIP. {data?.pnbp?.pegawai?.nip}</Text>
           </View>
         </View>
       </Page>

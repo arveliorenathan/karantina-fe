@@ -50,6 +50,7 @@ export default function PNBP() {
         current_page: result.current_page,
         last_page: result.last_page,
       });
+      console.log(result.data);
     } catch (error) {
       console.error("Error fetch permohonan:", error);
     } finally {

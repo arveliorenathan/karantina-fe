@@ -1,6 +1,7 @@
 import { Pegawai } from "./pegawai";
 import { Permohonan } from "./permohonan";
 
+
 type Pnbp = {
   id: number;
   kode_permohonan: string;
@@ -12,14 +13,14 @@ type Pnbp = {
   total_nominal: number;
   tanggal_pnbp: string;
   status: string;
-  tarif_layanan: {
+  tarif_layanan?: {
     id: number;
     nama_layanan: string;
     tarif: number;
     pivot: Pivot;
   }[];
-  permohonan: Permohonan;
-  pegawai: Pegawai;
+  permohonan?: Permohonan;
+  pegawai?: Pegawai;
   created_at: string;
   updated_at: string;
 };

@@ -25,6 +25,9 @@ import { Building, Eye, FileText, MoreHorizontal, Pencil, PlusCircle, QrCode, Se
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../auth-provider";
+import { getSurat } from "@/services/suratService";
+import { toast } from "sonner";
+import { PaginatedSurat } from "@/types/surat";
 
 export default function PermohonanPage() {
   const { user } = useAuth();
@@ -68,6 +71,25 @@ export default function PermohonanPage() {
     },
     [endDate, startDate],
   );
+
+  const handleCetak = async (permohonanId: number) => {
+    try {
+      const result: PaginatedSurat = await getSurat({
+        permohonan_id: permohonanId,
+        perihal: "Pemerikasaan Administrasi dan Penerimaan Sampel",
+      });
+
+      if (result.data.length === 0) {
+        toast.error("Surat tugas untuk Pemerikasaan Administrasi dan Penerimaan Sampel.");
+        return;
+      }
+
+      router.push(`/pdf/hasil-uji-preview?id=${permohonanId}`);
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat memeriksa surat.");
+    }
+  };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
@@ -317,7 +339,7 @@ export default function PermohonanPage() {
                               <DropdownMenuItem
                                 className="gap-2 cursor-pointer"
                                 disabled={permohonan.sampel?.length === 0 || permohonan?.sampel?.every((sampel) => sampel.hasil_uji?.length === 0)}
-                                onClick={() => router.push(`/pdf/serah-terima/petugas?id=${permohonan.id}`)}>
+                                onClick={() => handleCetak(permohonan.id)}>
                                 <FileText className="h-4 w-4" />
                                 <span>Berita Acara (Petugas)</span>
                               </DropdownMenuItem>
@@ -358,7 +380,7 @@ export default function PermohonanPage() {
                                           <Trash2 className="h-4 w-4" />
                                           <span>Hapus Permohonan</span>
                                         </div>
-                                      } 
+                                      }
                                       endpoint={`/permohonan/${permohonan.id}`}
                                       successMessage="Data permohonan berhasil dihapus"
                                       onSuccess={() => fetchPermohonan(pagination.current_page)}

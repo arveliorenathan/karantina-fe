@@ -28,7 +28,7 @@ export default function LembarHasilUji() {
     const fetchSurat = async () => {
       try {
         const result = await getSurat({
-          kode_permohonan: sampel?.kode_permohonan,
+          permohonan_id: sampel?.permohonan?.id,
           perihal: "Analisa dan Pengujian Sampel",
           limit: 0,
         });
@@ -43,10 +43,10 @@ export default function LembarHasilUji() {
       fetchSampel();
     }
 
-    if (sampel?.kode_permohonan) {
+    if (sampel?.permohonan?.id) {
       fetchSurat();
     }
-  }, [id, sampel?.kode_permohonan]);
+  }, [id, sampel?.permohonan?.id]);
 
   return (
     <div>

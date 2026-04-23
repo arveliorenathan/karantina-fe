@@ -59,7 +59,7 @@ export default function PegawaiPage() {
   }, []);
 
   useEffect(() => {
-    if (user?.role !== "admin") {
+    if (user?.role !== "superadmin") {
       logout("/forbidden");
     } else {
       fetchPegawai(1, search || undefined, status === "all" ? undefined : status);
