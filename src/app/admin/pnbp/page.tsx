@@ -175,7 +175,10 @@ export default function PNBP() {
                                 variant="default"
                                 disabled={pnbp.status !== "Sudah Dibayar"}
                                 size="icon-sm"
-                                onClick={() => router.push(`/pdf/kuitansi?id=${pnbp.id}`)}>
+                                onClick={() => {
+                                  const hashedId = btoa(String(pnbp.id));
+                                  router.push(`/pdf/kuitansi?id=${encodeURIComponent(hashedId)}`);
+                                }}>
                                 <Receipt className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>

@@ -10,11 +10,7 @@ type RekapitulasiAgendaProps = {
   end_date: string;
 };
 
-export const RekapitulasiAgenda = ({
-  data,
-  start_date,
-  end_date,
-}: RekapitulasiAgendaProps) => {
+export const RekapitulasiAgenda = ({ data, start_date, end_date }: RekapitulasiAgendaProps) => {
   let rowIndex = 1;
 
   const formatDate = (date: string) => {
@@ -34,22 +30,11 @@ export const RekapitulasiAgenda = ({
           <Logo src="/images/barantin.png" style={styles.logo} />
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerText}>BADAN KARANTINA INDONESIA</Text>
-            <Text style={styles.headerText}>
-              BALAI BESAR KARANTINA HEWAN, IKAN DAN TUMBUHAN BALI
-            </Text>
-            <Text style={styles.headerSubText}>
-              JALAN RAYA BENOA NO. 20/JALAN RAYA SESETAN NO. 312, PEDUNGAN,
-              DENPASAR SELATAN 80223
-            </Text>
-            <Text style={styles.headerSubText}>
-              TELEPON/FAXSIMILE (0361) 720805
-            </Text>
-            <Text style={styles.headerSubText}>
-              Email: karantinabali@karantinabalibali.com
-            </Text>
-            <Text style={styles.headerSubText}>
-              www.karantinanindonesia.go.id
-            </Text>
+            <Text style={styles.headerText}>BALAI BESAR KARANTINA HEWAN, IKAN DAN TUMBUHAN BALI</Text>
+            <Text style={styles.headerSubText}>JALAN RAYA BENOA NO. 20/JALAN RAYA SESETAN NO. 312, PEDUNGAN, DENPASAR SELATAN 80223</Text>
+            <Text style={styles.headerSubText}>TELEPON/FAXSIMILE (0361) 720805</Text>
+            <Text style={styles.headerSubText}>Email: karantinabali@karantinaindonesia.go.id</Text>
+            <Text style={styles.headerSubText}>www.karantinanindonesia.go.id</Text>
           </View>
         </View>
         {/* Garis Pemisah */}
@@ -57,62 +42,38 @@ export const RekapitulasiAgenda = ({
         {/* Judul */}
         <Text style={styles.judul}>Rekap Hasil Pengujian</Text>
         <Text>
-          Rekapitulasi Periode: {formatDate(start_date)} -{" "}
-          {formatDate(end_date)}
+          Rekapitulasi Periode: {formatDate(start_date)} - {formatDate(end_date)}
         </Text>
-        <Table
-          style={styles.table}
-          tdStyle={styles.td}
-          trStyle={{ fontSize: 8 }}>
+        <Table style={styles.table} tdStyle={styles.td} trStyle={{ fontSize: 8 }}>
           <TH>
-            <TD
-              weighting={0.5}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={0.5} style={{ justifyContent: "center", alignItems: "center" }}>
               No
             </TD>
-            <TD
-              weighting={2}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={2} style={{ justifyContent: "center", alignItems: "center" }}>
               Tanggal
             </TD>
-            <TD
-              weighting={4}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={4} style={{ justifyContent: "center", alignItems: "center" }}>
               Nama Perusahaan
             </TD>
-            <TD
-              weighting={3}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={3} style={{ justifyContent: "center", alignItems: "center" }}>
               Nama Sampel
             </TD>
-            <TD
-              weighting={3}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={3} style={{ justifyContent: "center", alignItems: "center" }}>
               Jumlah
             </TD>
-            <TD
-              weighting={3}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={3} style={{ justifyContent: "center", alignItems: "center" }}>
               Tujuan Uji
             </TD>
-            <TD
-              weighting={3}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={3} style={{ justifyContent: "center", alignItems: "center" }}>
               Parameter
             </TD>
-            <TD
-              weighting={3}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={3} style={{ justifyContent: "center", alignItems: "center" }}>
               Hasil Uji
             </TD>
-            <TD
-              weighting={4}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={4} style={{ justifyContent: "center", alignItems: "center" }}>
               Nama Penguji
             </TD>
-            <TD
-              weighting={3}
-              style={{ justifyContent: "center", alignItems: "center" }}>
+            <TD weighting={3} style={{ justifyContent: "center", alignItems: "center" }}>
               Selesai Uji
             </TD>
           </TH>

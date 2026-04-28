@@ -1,34 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"form">) {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const captchaRef = useRef<TurnstileInstance | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (!captchaToken) {
+      setError("Silakan selesaikan captcha terlebih dahulu.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("https://netqar2.linkpc.net/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: username,
-          password: password,
+          username,
+          password,
+          captchaToken,
         }),
       });
 
@@ -40,10 +48,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
         return;
       }
 
-      // simpan token
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-
       router.push("/admin/permohonan");
     } catch (err) {
       setError("Terjadi kesalahan koneksi");
@@ -68,6 +74,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
         <Field>
           <FieldLabel>Password</FieldLabel>
           <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        </Field>
+
+        <Field>
+          <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!} ref={captchaRef} onSuccess={(token: string) => setCaptchaToken(token)} />
         </Field>
 
         {error && <div className="text-red-500 text-sm text-center">{error}</div>}

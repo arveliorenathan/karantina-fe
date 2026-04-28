@@ -11,7 +11,8 @@ export const HasilUjiPDF = ({ data }: { data: { sampel: Sampel | null; surat: Su
   const currentDate = new Date();
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const year = currentDate.getFullYear();
-  const url = `http://localhost:3000/pdf/hasil-uji?id=${data?.sampel?.id}`;
+  const url = `/pdf/hasil-uji?id=${data?.sampel?.id}`;
+  const imageUrl = `${window.location.origin}/images/barantin.png`;
 
   const formattedDate = currentDate.toLocaleDateString("id-ID", {
     day: "2-digit",
@@ -24,7 +25,8 @@ export const HasilUjiPDF = ({ data }: { data: { sampel: Sampel | null; surat: Su
   };
 
   const generateQRCode = (url: string) => {
-    const qrCode = qr.imageSync(url, { type: "png" });
+    const fullURL = `${window.location.origin}${url}`;
+    const qrCode = qr.imageSync(fullURL, { type: "png" });
     return `data:image/png;base64,${qrCode.toString("base64")}`;
   };
 
@@ -38,7 +40,7 @@ export const HasilUjiPDF = ({ data }: { data: { sampel: Sampel | null; surat: Su
         <Page size="A4" style={styles.page}>
           {/* Header Section */}
           <View style={styles.header}>
-            <Logo src="/images/barantin.png" style={styles.logoBarantin} />
+            <Logo src={imageUrl} style={styles.logoBarantin} />
 
             <View style={[styles.headerTextContainer, { flex: 1, justifyContent: "center", alignItems: "center" }]}>
               <Text style={styles.headerText}>BADAN KARANTINA INDONESIA</Text>
@@ -226,7 +228,7 @@ export const HasilUjiPDF = ({ data }: { data: { sampel: Sampel | null; surat: Su
               </View>
             </View>
           </View>
-        </Page> 
+        </Page>
       )}
 
       {/* KAN */}

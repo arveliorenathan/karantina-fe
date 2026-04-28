@@ -39,7 +39,8 @@ const getCurrentDateAndDay = () => {
 const { day, date, time } = getCurrentDateAndDay();
 
 const generateQRCode = (url: string) => {
-  const qrCode = qr.imageSync(url, { type: "png" });
+  const fullURL = `${window.location.origin}${url}`;
+  const qrCode = qr.imageSync(fullURL, { type: "png" });
   return `data:image/png;base64,${qrCode.toString("base64")}`;
 };
 
@@ -89,10 +90,7 @@ const SignatureSection = ({ data }: { data: { permohonan: Permohonan | null; sur
               <View style={styles.signatureTableColumn}>
                 <Text style={styles.signatureTableLabel}>Petugas Pengambil Sampel Uji</Text>
                 <View style={styles.qrContainer}>
-                  <Logo
-                    src={generateQRCode(`http://localhost:3000/pdf/serah-terima/pengguna-jasa?id=${data.permohonan?.id}`)}
-                    style={{ width: 70, height: 70 }}
-                  />
+                  <Logo src={generateQRCode(`/pdf/serah-terima/pengguna-jasa?id=${data.permohonan?.id}`)} style={{ width: 70, height: 70 }} />
                 </View>
                 <Text style={styles.signatureTableName}>{data?.surat?.[0]?.penerima_tugas?.[0].nama_pegawai || "___________________"}</Text>
               </View>
@@ -100,10 +98,7 @@ const SignatureSection = ({ data }: { data: { permohonan: Permohonan | null; sur
               <View style={styles.signatureTableColumn}>
                 <Text style={styles.signatureTableLabel}>Petugas Penerima Sampel Uji</Text>
                 <View style={styles.qrContainer}>
-                  <Logo
-                    src={generateQRCode(`http://localhost:3000/pdf/serah-terima/pengguna-jasa?id=${data?.permohonan?.id}`)}
-                    style={{ width: 70, height: 70 }}
-                  />
+                  <Logo src={generateQRCode(`/pdf/serah-terima/pengguna-jasa?id=${data?.permohonan?.id}`)} style={{ width: 70, height: 70 }} />
                 </View>
                 <Text style={styles.signatureTableName}>{data?.surat?.[0]?.penerima_tugas?.[1].nama_pegawai || "___________________"}</Text>
               </View>
@@ -135,7 +130,7 @@ export const SerahTerimaPetugas = ({ data }: { data: { permohonan: Permohonan | 
             <Text style={styles.headerText}>BALAI BESAR KARANTINA HEWAN, IKAN DAN TUMBUHAN BALI</Text>
             <Text style={styles.headerSubText}>JALAN RAYA BENOA NO. 20/JALAN RAYA SESETAN NO. 312, PEDUNGAN, DENPASAR SELATAN 80223</Text>
             <Text style={styles.headerSubText}>TELEPON/FAXSIMILE (0361) 720805</Text>
-            <Text style={styles.headerSubText}>Email: karantinabali@karantinabalibali.com</Text>
+            <Text style={styles.headerSubText}>Email: karantinabali@karantinaindonesia.go.id</Text>
             <Text style={styles.headerSubText}>www.karantinanindonesia.go.id</Text>
           </View>
         </View>

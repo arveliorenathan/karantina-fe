@@ -50,13 +50,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserState(u);
   };
 
-  const logout = (redirectTo: string = "/login") => {
+  const logout = (redirectTo?: string) => {
     if (!mounted) return;
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setTokenState(null);
     setUserState(null);
-    router.push(redirectTo);
+    router.push(redirectTo || "/login");
   };
 
   if (!mounted) return null;

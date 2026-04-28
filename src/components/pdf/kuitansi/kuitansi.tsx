@@ -20,9 +20,10 @@ export const Kuitansi = ({ data }: { data: { pnbp: Pnbp | null } }) => {
     }).format(amount);
   };
 
-  const url = `http://localhost:3000/pdf/kuitansi?id=${data?.pnbp?.id}`;
+  const url = `/pdf/kuitansi?id=${data?.pnbp?.id}`;
   const generateQRCode = (url: string) => {
-    const qrCode = qr.imageSync(url, { type: "png" });
+    const fullURL = `${window.location.origin}${url}`;
+    const qrCode = qr.imageSync(fullURL, { type: "png" });
     return `data:image/png;base64,${qrCode.toString("base64")}`;
   };
 
@@ -30,14 +31,14 @@ export const Kuitansi = ({ data }: { data: { pnbp: Pnbp | null } }) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Logo src="/images/barantin.png" style={styles.logoBarantin} />
+          <Logo src={`${window.location.origin}/images/barantin.png`} style={styles.logoBarantin} />
 
           <View style={[styles.headerTextContainer, { flex: 1, justifyContent: "center", alignItems: "center" }]}>
             <Text style={styles.headerText}>BADAN KARANTINA INDONESIA</Text>
             <Text style={styles.headerText}>BALAI BESAR KARANTINA HEWAN, IKAN DAN TUMBUHAN BALI</Text>
             <Text style={styles.headerSubText}>JALAN RAYA BENOA NO. 20/JALAN RAYA SESETAN NO. 312, PEDUNGAN, DENPASAR SELATAN 80223</Text>
             <Text style={styles.headerSubText}>TELEPON/FAXSIMILE (0361) 720805</Text>
-            <Text style={styles.headerSubText}>Email: karantinabali@karantinabalibali.com</Text>
+            <Text style={styles.headerSubText}>Email: karantinabali@karantinaindonesia.go.id</Text>
             <Text style={styles.headerSubText}>www.karantinanindonesia.go.id</Text>
           </View>
 

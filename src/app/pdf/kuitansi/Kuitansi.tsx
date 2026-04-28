@@ -11,7 +11,8 @@ import { LoadingOverlay } from "@/components/admin/loading-data";
 export default function KuitansiPage() {
   const [pnbp, setPnbp] = useState<Pnbp | null>(null);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const hashedId = searchParams.get("id");
+  const id = hashedId ? Number(atob(decodeURIComponent(hashedId))) : null;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

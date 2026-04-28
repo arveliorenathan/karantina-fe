@@ -11,7 +11,7 @@ export const HasilUjiSementaraPDF = ({ data }: { data: { sampel: Sampel | null; 
   const currentDate = new Date();
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const year = currentDate.getFullYear();
-  const url = `http://localhost:3000/pdf/hasil-uji?id=${data?.sampel?.id}`;
+  const url = `/pdf/hasil-uji?id=${data?.sampel?.id}`;
 
   const formattedDate = currentDate.toLocaleDateString("id-ID", {
     day: "2-digit",
@@ -24,7 +24,8 @@ export const HasilUjiSementaraPDF = ({ data }: { data: { sampel: Sampel | null; 
   };
 
   const generateQRCode = (url: string) => {
-    const qrCode = qr.imageSync(url, { type: "png" });
+    const fullURL = `${window.location.origin}${url}`;
+    const qrCode = qr.imageSync(fullURL, { type: "png" });
     return `data:image/png;base64,${qrCode.toString("base64")}`;
   };
 
@@ -44,7 +45,7 @@ export const HasilUjiSementaraPDF = ({ data }: { data: { sampel: Sampel | null; 
             <Text style={styles.headerText}>BALAI BESAR KARANTINA HEWAN, IKAN DAN TUMBUHAN BALI</Text>
             <Text style={styles.headerSubText}>JALAN RAYA BENOA NO. 20/JALAN RAYA SESETAN NO. 312, PEDUNGAN, DENPASAR SELATAN 80223</Text>
             <Text style={styles.headerSubText}>TELEPON/FAXSIMILE (0361) 720805</Text>
-            <Text style={styles.headerSubText}>Email: karantinabali@karantinabalibali.com</Text>
+            <Text style={styles.headerSubText}>Email: karantinabali@karantinaindonesia.go.id</Text>
             <Text style={styles.headerSubText}>www.karantinanindonesia.go.id</Text>
           </View>
 
@@ -238,7 +239,7 @@ export const HasilUjiSementaraPDF = ({ data }: { data: { sampel: Sampel | null; 
             <Text style={styles.headerText}>BALAI BESAR KARANTINA HEWAN, IKAN DAN TUMBUHAN BALI</Text>
             <Text style={styles.headerSubText}>JALAN RAYA BENOA NO. 20/JALAN RAYA SESETAN NO. 312, PEDUNGAN, DENPASAR SELATAN 80223</Text>
             <Text style={styles.headerSubText}>TELEPON/FAXSIMILE (0361) 720805</Text>
-            <Text style={styles.headerSubText}>Email: karantinabali@karantinabalibali.com</Text>
+            <Text style={styles.headerSubText}>Email: karantinabali@karantinaindonesia.go.id</Text>
             <Text style={styles.headerSubText}>www.karantinanindonesia.go.id</Text>
           </View>
 

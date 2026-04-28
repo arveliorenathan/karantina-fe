@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -40,13 +40,11 @@ function getPageInfo(pathname: string) {
 
 export function AdminHeader() {
   const pathname = usePathname();
-  const router = useRouter();
   const { user, logout } = useAuth();
   const { title, description } = getPageInfo(pathname);
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
   };
 
   return (

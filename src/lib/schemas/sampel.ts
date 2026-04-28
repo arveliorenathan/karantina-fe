@@ -15,7 +15,7 @@ export type CreateSampel = z.infer<typeof CreateSampelSchema>;
 
 export const EditSampelSchema = CreateSampelSchema.partial().extend({
   id: z.number(),
-  kesimpulan: z.string().nullable(),
+  kesimpulan: z.string().nullable().optional(),
 });
 
 export type EditSampel = z.infer<typeof EditSampelSchema>;

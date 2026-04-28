@@ -53,6 +53,7 @@ export default function ManagementSampel() {
               spesies: sample.spesies,
               jumlah: sample.jumlah,
               satuan: sample.satuan,
+              kondisi: sample.kondisi,
               lab_id: sample.lab_id,
               tanggal_pengujian: sample.tanggal_pengujian || undefined,
             });

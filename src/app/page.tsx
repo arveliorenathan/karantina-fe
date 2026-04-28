@@ -47,11 +47,11 @@ export default function Home() {
           <div className="mx-auto max-w-3xl text-center">
             <Badge className="inline-flex items-center gap-2 px-3 py-1 mb-4">
               <Globe2 className="h-3.5 w-3.5 text-white" />
-              Sistem Informasi Balai Karantina Digital
+              Dewata e-Laboratory BBKHIT Bali
             </Badge>
 
             <h1 className="text-primary text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold tracking-tight text-center">
-              Sistem Informasi Laboratorium
+              Dewata e-Laboratory
               <br />
               Balai Besar Karantina Hewan, Ikan, dan Tumbuhan Bali
             </h1>

@@ -135,7 +135,7 @@ export default function HasilUjiForm({ defaultValue, onSubmit, loading, sampel, 
                                   setOpenParameter(false);
                                 }}
                                 className="truncate">
-                                {parameter.nama_parameter}
+                                {parameter.nama_parameter} / {parameter.metode_pengujian}
                               </CommandItem>
                             ))}
                           </CommandGroup>
