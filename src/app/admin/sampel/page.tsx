@@ -1,4 +1,5 @@
 "use client";
+import DeleteDialog from "@/components/admin/delete-dialog";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,12 +21,14 @@ import { getSurat } from "@/services/suratService";
 import { PaginatedSampel, Sampel } from "@/types/sampel";
 import { PaginatedSurat } from "@/types/surat";
 
-import { ClipboardList, Eye, Pencil, Plus, SearchIcon } from "lucide-react";
+import { ClipboardList, Eye, Pencil, Plus, SearchIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "../auth-provider";
 
 export default function SampelPage() {
+  const { user } = useAuth();
   const [sampel, setSampel] = useState<Sampel[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -198,6 +201,24 @@ export default function SampelPage() {
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>Ubah Data Sampel</TooltipContent>
+                          </Tooltip>
+                        )}
+
+                        {user?.role == "superadmin" && (
+                          <Tooltip>
+                            <DeleteDialog
+                              trigger={
+                                <TooltipTrigger asChild>
+                                  <Button variant="destructive" size="icon" className="hover:bg-red-700">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                              }
+                              endpoint={`/sampel/${sampel.id}`}
+                              successMessage="Data sampel berhasil dihapus"
+                              onSuccess={() => fetchSampel(pagination.current_page)}
+                            />
+                            <TooltipContent>Hapus Data Pegawai</TooltipContent>
                           </Tooltip>
                         )}
                       </div>
