@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calculator, PackageSearch, Search, TestTube } from "lucide-react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { PaginatedParameter, Parameter } from "@/types/parameter";
-import { getParameter } from "@/services/parameterService";
+import { getEstimateParameter } from "@/services/parameterService";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile";
+import { toast } from "sonner";
 
 export default function KetersediaanParameter() {
   const [parameter, setParameter] = useState<Parameter[]>([]);
@@ -33,11 +35,14 @@ export default function KetersediaanParameter() {
     current_page: 1,
     last_page: 1,
   });
+  const [hasSearched, setHasSearched] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<TurnstileInstance | null>(null);
 
   const fetchParameter = useCallback(async (page: number, search?: string, klasifikasi?: string) => {
     setLoading(true);
     try {
-      const result: PaginatedParameter = await getParameter({
+      const result: PaginatedParameter = await getEstimateParameter({
         page,
         search,
         klasifikasi,
@@ -47,13 +52,29 @@ export default function KetersediaanParameter() {
         current_page: result.current_page,
         last_page: result.last_page,
       });
-      console.log(result.data)
+      console.log(result.data);
     } catch (error) {
       console.error("Error fetching parameters:", error);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!klasifikasi) {
+      toast.error("Silakan pilih klasifikasi terlebih dahulu.");
+      return;
+    }
+
+    if (!captchaToken) {
+      toast.error("Silakan selesaikan captcha terlebih dahulu.");
+      return;
+    }
+
+    setHasSearched(true);
+    await fetchParameter(1, search, klasifikasi);
+  };
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -124,161 +145,169 @@ export default function KetersediaanParameter() {
           <div className="grid gap-4 lg:grid-cols-[1fr_320px] md:grid-cols-1">
             <Card className="border-2 border-dashed border-primary/20 bg-card shadow-sm">
               <CardContent className="p-6">
-                <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto]">
-                  <div className="space-y-2">
-                    <Label htmlFor="klasifikasi" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Klasifikasi
-                    </Label>
-                    <Select value={klasifikasi} onValueChange={setKlasifikasi}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih klasifikasi" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="KI">Karantina Ikan</SelectItem>
-                          <SelectItem value="KH">Karantina Hewan</SelectItem>
-                          <SelectItem value="KT">Karantina Tumbuhan</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto]">
+                    <div className="space-y-2">
+                      <Label htmlFor="klasifikasi" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        Klasifikasi
+                      </Label>
+                      <Select value={klasifikasi} onValueChange={setKlasifikasi}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih klasifikasi" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="KI">Karantina Ikan</SelectItem>
+                            <SelectItem value="KH">Karantina Hewan</SelectItem>
+                            <SelectItem value="KT">Karantina Tumbuhan</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="kode" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        Search
+                      </Label>
+                      <Input id="kode" placeholder="Masukan nama parameter uji" value={search} onChange={(e) => setSearch(e.target.value)} />
+                    </div>
+                    <div className="flex w-full sm:w-auto">
+                      <Button type="submit" className="px-6 w-full mt-6 sm:w-auto" disabled={loading}>
+                        <Search className="h-4 w-4 mr-2" />
+                        <span>{loading ? "Loading..." : "Search"}</span>
+                      </Button>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="kode" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Search
-                    </Label>
-                    <Input id="kode" placeholder="Masukan nama parameter uji" value={search} onChange={(e) => setSearch(e.target.value)} />
+                  <div className="flex justify-center mt-2">
+                    <Turnstile
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!}
+                      ref={captchaRef}
+                      onSuccess={(token: string) => setCaptchaToken(token)}
+                    />
                   </div>
+                </form>
 
-                  <div className="flex items-end">
-                    <Button
-                      className="px-6 w-full sm:w-auto"
-                      disabled={loading}
-                      onClick={() => fetchParameter(1, search || undefined, klasifikasi || undefined)}>
-                      <Search className="h-4 w-4 mr-2" />
-                      <span>{loading ? "Loading..." : "Search"}</span>
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto mt-8 space-y-4">
-                  <Table className="border">
-                    <TableHeader className="bg-primary">
-                      <TableRow>
-                        <TableHead className="text-center text-primary-foreground w-16">Nama</TableHead>
-                        <TableHead className="text-center text-primary-foreground w-16 whitespace-nowrap">Metode</TableHead>
-                        <TableHead className="text-center text-primary-foreground w-28 whitespace-nowrap">Akreditasi</TableHead>
-                        <TableHead className="text-center text-primary-foreground w-32 whitespace-nowrap">Estimasi PNBP</TableHead>
-                        <TableHead className="text-center text-primary-foreground w-24 whitespace-nowrap">Status</TableHead>
-                        <TableHead className="text-center text-primary-foreground w-24 whitespace-nowrap">Pilih</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {loading ? (
-                        <>
-                          {[1, 2, 3, 4].map((i) => (
-                            <TableRow key={i}>
-                              <TableCell colSpan={7} className="text-center">
-                                <Skeleton className="h-8 w-full" />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </>
-                      ) : parameter.length === 0 ? (
+                {hasSearched && (
+                  <div className="overflow-x-auto mt-8 space-y-4">
+                    <Table className="border">
+                      <TableHeader className="bg-primary">
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
-                            Tidak ada data parameter
-                          </TableCell>
+                          <TableHead className="text-center text-primary-foreground w-16">Nama</TableHead>
+                          <TableHead className="text-center text-primary-foreground w-16 whitespace-nowrap">Metode</TableHead>
+                          <TableHead className="text-center text-primary-foreground w-28 whitespace-nowrap">Akreditasi</TableHead>
+                          <TableHead className="text-center text-primary-foreground w-32 whitespace-nowrap">Estimasi PNBP</TableHead>
+                          <TableHead className="text-center text-primary-foreground w-24 whitespace-nowrap">Status</TableHead>
+                          <TableHead className="text-center text-primary-foreground w-24 whitespace-nowrap">Pilih</TableHead>
                         </TableRow>
-                      ) : (
-                        parameter.map((param) => {
-                          const estimasiNumber = typeof param.estimasi_pnbp === "string" ? parseFloat(param.estimasi_pnbp) : param.estimasi_pnbp || 0;
+                      </TableHeader>
+                      <TableBody>
+                        {loading ? (
+                          <>
+                            {[1, 2, 3, 4].map((i) => (
+                              <TableRow key={i}>
+                                <TableCell colSpan={7} className="text-center">
+                                  <Skeleton className="h-8 w-full" />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </>
+                        ) : parameter.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                              Tidak ada data parameter
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          parameter.map((param) => {
+                            const estimasiNumber =
+                              typeof param.estimasi_pnbp === "string" ? parseFloat(param.estimasi_pnbp) : param.estimasi_pnbp || 0;
 
-                          return (
-                            <TableRow key={param.id}>
-                              <TableCell className="text-center text-xs">{param.nama_parameter}</TableCell>
-                              <TableCell className="text-center text-xs">{param.metode_pengujian}</TableCell>
-                              <TableCell className="text-center text-xs">
-                                <Badge>{param.keterangan_parameter}</Badge>
-                              </TableCell>
-                              <TableCell className="text-center text-xs whitespace-nowrap">Rp. {estimasiNumber.toLocaleString("id-ID")}</TableCell>
-                              <TableCell className="text-center">
-                                <Badge className={`text-xs px-3 py-1 rounded-lg font-semibold ${getStatusBadgeClass(param.status)}`}>
-                                  {param.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <Button
-                                  variant={selectedParams.has(param.id) ? "default" : "outline"}
-                                  size="sm"
-                                  onClick={() => handleSelectParameter(param)}
-                                  disabled={param.status !== "Tersedia"}
-                                  className="w-full">
-                                  {selectedParams.has(param.id) ? "Selected" : "Select"}
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })
-                      )}
-                    </TableBody>
-                  </Table>
-                  <Pagination>
-                    <PaginationContent>
-                      {/* Previous Button */}
-                      <PaginationItem>
-                        <PaginationPrevious
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (pagination.current_page > 1) {
-                              fetchParameter(pagination.current_page + 1, search, klasifikasi);
-                            }
-                          }}
-                          className={pagination.current_page === 1 ? "cursor-not-allowed opacity-50" : ""}
-                        />
-                      </PaginationItem>
-
-                      {/* Page Number Links */}
-                      {[...Array(pagination.last_page)].map((_, index) => {
-                        const pageNum = index + 1;
-                        return (
-                          <PaginationItem key={pageNum}>
-                            <PaginationLink
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                fetchParameter(pageNum, search, klasifikasi);
-                              }}
-                              isActive={pageNum === pagination.current_page}>
-                              {pageNum}
-                            </PaginationLink>
-                          </PaginationItem>
-                        );
-                      })}
-
-                      {/* Ellipsis for large page ranges */}
-                      {pagination.current_page < pagination.last_page - 1 && (
+                            return (
+                              <TableRow key={param.id}>
+                                <TableCell className="text-center text-xs">{param.nama_parameter}</TableCell>
+                                <TableCell className="text-center text-xs">{param.metode_pengujian}</TableCell>
+                                <TableCell className="text-center text-xs">
+                                  <Badge>{param.keterangan_parameter}</Badge>
+                                </TableCell>
+                                <TableCell className="text-center text-xs whitespace-nowrap">Rp. {estimasiNumber.toLocaleString("id-ID")}</TableCell>
+                                <TableCell className="text-center">
+                                  <Badge className={`text-xs px-3 py-1 rounded-lg font-semibold ${getStatusBadgeClass(param.status)}`}>
+                                    {param.status}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <Button
+                                    variant={selectedParams.has(param.id) ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => handleSelectParameter(param)}
+                                    disabled={param.status !== "Tersedia"}
+                                    className="w-full">
+                                    {selectedParams.has(param.id) ? "Selected" : "Select"}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                        )}
+                      </TableBody>
+                    </Table>
+                    <Pagination>
+                      <PaginationContent>
+                        {/* Previous Button */}
                         <PaginationItem>
-                          <PaginationEllipsis />
+                          <PaginationPrevious
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (pagination.current_page > 1) {
+                                fetchParameter(pagination.current_page + 1, search, klasifikasi);
+                              }
+                            }}
+                            className={pagination.current_page === 1 ? "cursor-not-allowed opacity-50" : ""}
+                          />
                         </PaginationItem>
-                      )}
 
-                      {/* Next Button */}
-                      <PaginationItem>
-                        <PaginationNext
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (pagination.current_page < pagination.last_page) {
-                              fetchParameter(pagination.current_page + 1, search, klasifikasi);
-                            }
-                          }}
-                          className={pagination.current_page === pagination.last_page ? "cursor-not-allowed opacity-50" : ""}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </div>
+                        {/* Page Number Links */}
+                        {[...Array(pagination.last_page)].map((_, index) => {
+                          const pageNum = index + 1;
+                          return (
+                            <PaginationItem key={pageNum}>
+                              <PaginationLink
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  fetchParameter(pageNum, search, klasifikasi);
+                                }}
+                                isActive={pageNum === pagination.current_page}>
+                                {pageNum}
+                              </PaginationLink>
+                            </PaginationItem>
+                          );
+                        })}
+
+                        {/* Ellipsis for large page ranges */}
+                        {pagination.current_page < pagination.last_page - 1 && (
+                          <PaginationItem>
+                            <PaginationEllipsis />
+                          </PaginationItem>
+                        )}
+
+                        {/* Next Button */}
+                        <PaginationItem>
+                          <PaginationNext
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (pagination.current_page < pagination.last_page) {
+                                fetchParameter(pagination.current_page + 1, search, klasifikasi);
+                              }
+                            }}
+                            className={pagination.current_page === pagination.last_page ? "cursor-not-allowed opacity-50" : ""}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

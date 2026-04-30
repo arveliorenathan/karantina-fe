@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Building, Download, InfoIcon, PackageSearch, Search, TestTube } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { PaginatedPermohonan, Permohonan } from "@/types/permohonan";
-import { useCallback, useState } from "react";
-import { getPermohonan } from "@/services/permohonanService";
+import { useRef, useState } from "react";
+import { track } from "@/services/permohonanService";
 import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile";
+import { toast } from "sonner";
 
 export default function TrackingPermohonan() {
   const [permohonan, setPermohonan] = useState<Permohonan[]>([]);
@@ -20,28 +22,44 @@ export default function TrackingPermohonan() {
   const [pin, setPin] = useState("");
   const router = useRouter();
 
-  const fetchPermohonan = useCallback(async () => {
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const captchaRef = useRef<TurnstileInstance | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(false);
+
     if (!kode || !pin) {
-      alert("Mohon masukkan Kode Permohonan dan PIN");
+      toast.error("Mohon masukkan Kode Permohonan dan PIN");
+      return;
+    }
+
+    if (!captchaToken) {
+      toast.error("Silakan selesaikan captcha terlebih dahulu.");
       return;
     }
 
     setLoading(true);
+
     try {
-      const result: PaginatedPermohonan = await getPermohonan({
-        page: 1,
+      const result: PaginatedPermohonan = await track({
         kode_permohonan: kode,
-        pin,
-        limit: 1,
+        pin: pin,
       });
+
+      if (result.data.length === 0) {
+        toast.error("Permohonan tidak ditemukan");
+      }
       setPermohonan(result.data);
-    } catch (error) {
-      console.error("Error fetch permohonan:", error);
-      alert("Permohonan tidak ditemukan atau terjadi kesalahan");
+      console.log(result.data)
+    } catch (err) {
+      console.error("Error fetch permohonan:", err);
+      toast.error("Terjadi kesalahan saat memproses permohonan");
     } finally {
       setLoading(false);
     }
-  }, [kode, pin]);
+  };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
@@ -74,14 +92,24 @@ export default function TrackingPermohonan() {
 
         <Card className="border-2 border-dashed border-primary/20 bg-card shadow-sm">
           <CardContent>
-            <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto]">
-              <div className="space-y-2">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4 w-full p-4 ">
+              {/* Kode Permohonan */}
+              <div className="flex-1 flex flex-col space-y-1">
                 <Label htmlFor="kode" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Kode Permohonan
                 </Label>
-                <Input id="kode" placeholder="Contoh: 2024-KI-0001" className="h-11" value={kode} onChange={(e) => setKode(e.target.value)} />
+                <Input
+                  id="kode"
+                  placeholder="Contoh: 2024/KI/0001"
+                  className="h-11 w-full"
+                  value={kode}
+                  onChange={(e) => setKode(e.target.value.toUpperCase().replace(/[^0-9A-Z/]/g, ""))}
+                  maxLength={16}
+                />
               </div>
-              <div className="space-y-2">
+
+              {/* PIN */}
+              <div className="flex-1 flex flex-col space-y-1">
                 <Label htmlFor="pin" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   PIN
                 </Label>
@@ -90,14 +118,24 @@ export default function TrackingPermohonan() {
                   type="password"
                   placeholder="6 digit PIN"
                   maxLength={6}
-                  className="h-11"
+                  className="h-11 w-full"
                   value={pin}
-                  onChange={(e) => setPin(e.target.value)}
+                  onChange={(e) => setPin(e.target.value.replace(/[^0-9]/g, ""))}
                 />
               </div>
 
-              <div className="flex items-end">
-                <Button className="h-11 px-6 w-full sm:w-auto" onClick={fetchPermohonan} disabled={loading}>
+              {/* Captcha */}
+              <div className="flex justify-center items-center mt-2 sm:mt-0">
+                <Turnstile
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!}
+                  ref={captchaRef}
+                  onSuccess={(token: string) => setCaptchaToken(token)}
+                />
+              </div>
+
+              {/* Button */}
+              <div className="mt-2 sm:mt-0">
+                <Button className="h-11 px-6 w-full sm:w-auto flex items-center justify-center gap-2" onClick={handleSubmit} disabled={loading}>
                   <Search className="h-4 w-4" />
                   <span>{loading ? "Loading..." : "Track Permohonan"}</span>
                 </Button>

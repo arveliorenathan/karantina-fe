@@ -36,6 +36,22 @@ export async function getPermohonan(params?: {
   }
 }
 
+export async function track(params?: { kode_permohonan?: string; pin?: string }): Promise<PaginatedPermohonan> {
+  try {
+    const response = await api.get("/permohonan/track", {
+      params: {
+        kode_permohonan: params?.kode_permohonan,
+        pin: params?.pin,
+      },
+    });
+    console.log(response.data.data);
+    return response.data.data;
+  } catch (error) {
+    toast.error("Gagal mengambil data pegawai");
+    throw error;
+  }
+}
+
 export async function getPermohonanById(id: number) {
   try {
     const response = await api.get(`/permohonan/${id}`);

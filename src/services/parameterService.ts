@@ -2,6 +2,28 @@ import api from "@/lib/api";
 import { PaginatedParameter, Parameter } from "@/types/parameter";
 import { toast } from "sonner";
 
+export async function getEstimateParameter(params?: {
+  search?: string;
+  klasifikasi?: string;
+  page?: number;
+  limit?: number;
+}): Promise<PaginatedParameter> {
+  try {
+    const response = await api.get("/parameter/estimate", {
+      params: {
+        search: params?.search,
+        klasifikasi: params?.klasifikasi,
+        page: params?.page,
+        limit: params?.limit,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    toast.error("Gagal mengambil data parameter");
+    throw error;
+  }
+}
+
 export async function getParameter(params?: {
   search?: string;
   status?: string;
@@ -36,9 +58,7 @@ export async function getParameterById(id: number) {
   }
 }
 
-export async function createParameter(
-  data: Omit<Parameter, "id" | "kode_parameter" | "created_at" | "updated_at">,
-) {
+export async function createParameter(data: Omit<Parameter, "id" | "kode_parameter" | "created_at" | "updated_at">) {
   try {
     const response = await api.post("/parameter", data);
     toast.success("Data parameter berhasil ditambahkan");

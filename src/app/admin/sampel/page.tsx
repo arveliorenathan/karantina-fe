@@ -121,6 +121,7 @@ export default function SampelPage() {
             <TableHeader className="bg-primary">
               <TableRow>
                 <TableHead className="text-center text-primary-foreground w-24">Kode Sampel</TableHead>
+                <TableHead className="text-center text-primary-foreground w-24">Kode Permohonan</TableHead>
                 <TableHead className="text-center text-primary-foreground w-24">Nama Sampel</TableHead>
                 <TableHead className="text-center text-primary-foreground w-32">Laboratorium</TableHead>
                 <TableHead className="text-center text-primary-foreground w-24">Tanggal Pengujian</TableHead>
@@ -131,7 +132,7 @@ export default function SampelPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center">
+                  <TableCell colSpan={7} className="text-center">
                     <Skeleton className="h-8 w-full" />
                     <Skeleton className="h-8 w-full" />
                     <Skeleton className="h-8 w-full" />
@@ -140,7 +141,7 @@ export default function SampelPage() {
                 </TableRow>
               ) : sampel.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                     Tidak ada data sampel
                   </TableCell>
                 </TableRow>
@@ -148,6 +149,7 @@ export default function SampelPage() {
                 sampel.map((sampel) => (
                   <TableRow key={sampel.id}>
                     <TableCell className="text-center text-xs">{sampel.kode_sampel}</TableCell>
+                    <TableCell className="text-center text-xs">{sampel.kode_permohonan}</TableCell>
                     <TableCell className="text-center text-xs">{sampel.nama_sampel}</TableCell>
                     <TableCell className="text-center text-xs">
                       {sampel.laboratorium?.nama_laboratorium} - {sampel.laboratorium?.klasifikasi}

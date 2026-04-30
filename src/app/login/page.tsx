@@ -21,8 +21,8 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
-        <Image src="/images/Kantor.jpeg" height={100} width={60} alt="Logo" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="flex-1 relative hidden md:block">
+        <Image src="/images/Kantor.jpeg" alt="Kantor" fill className="object-cover" priority />
       </div>
     </div>
   );
