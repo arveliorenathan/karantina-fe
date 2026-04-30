@@ -182,6 +182,7 @@ export default function SampelForm({ onSubmit, defaultValues, isEditMode, labora
                         <SelectContent>
                           <SelectItem value="Ekor">Ekor</SelectItem>
                           <SelectItem value="Kilogram">Kilogram</SelectItem>
+                          <SelectItem value="Gram">Kilogram</SelectItem>
                           <SelectItem value="Buah">Buah</SelectItem>
                           <SelectItem value="Butir">Butir</SelectItem>
                           <SelectItem value="Batang">Batang</SelectItem>
