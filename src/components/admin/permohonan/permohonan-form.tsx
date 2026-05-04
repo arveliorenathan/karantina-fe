@@ -153,6 +153,7 @@ export default function PermohonanForm({ defaultValue, pegawaiList, laboratorium
                       <SelectValue placeholder="Pilih tujuan pengujian" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="Monitoring Mandiri">Monitoring Surveylen</SelectItem>
                       <SelectItem value="Monitoring Mandiri">Monitoring Mandiri</SelectItem>
                       <SelectItem value="Wabah Penyakit">Wabah Penyakit</SelectItem>
                       <SelectItem value="Penelitian">Penelitian</SelectItem>
