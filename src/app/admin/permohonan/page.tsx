@@ -85,7 +85,7 @@ export default function PermohonanPage() {
       }
 
       const hashedId = btoa(String(permohonanId));
-      router.push(`/pdf/hasil-uji-preview?id=${encodeURIComponent(hashedId)}`);
+      router.push(`/pdf/serah-terima/pengguna-jasa?id=${encodeURIComponent(hashedId)}`);
     } catch (err) {
       console.error(err);
       alert("Terjadi kesalahan saat memeriksa surat.");
