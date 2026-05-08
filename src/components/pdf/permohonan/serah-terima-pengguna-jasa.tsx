@@ -150,14 +150,18 @@ export const SerahTerimaPenggunaJasa = ({ data }: { data: Permohonan | null }) =
           {/* Checkbox Group */}
           <View style={styles.titleContent}>
             <View style={styles.checkboxColumn}>
+              <CheckboxItem checked={isChecked("Monitoring Surveilans", data?.tujuan_pengujian)} label="Monitoring Surveilans" />
               <CheckboxItem checked={isChecked("Monitoring Mandiri", data?.tujuan_pengujian)} label="Monitoring mandiri (Own Check)" />
               <CheckboxItem checked={isChecked("Wabah Penyakit", data?.tujuan_pengujian)} label="Wabah penyakit" />
-              <CheckboxItem checked={isChecked("Penelitian", data?.tujuan_pengujian)} label="Penelitian" />
             </View>
 
             <View style={styles.checkboxColumn}>
+              <CheckboxItem checked={isChecked("Penelitian", data?.tujuan_pengujian)} label="Penelitian" />
               <CheckboxItem checked={isChecked("Uji Banding", data?.tujuan_pengujian)} label="Uji Banding" />
               <CheckboxItem checked={isChecked("Uji Profisiensi", data?.tujuan_pengujian)} label="Uji Profisiensi" />
+            </View>
+
+            <View style={styles.checkboxColumn}>
               <CheckboxItem checked={isChecked("Lainnya", data?.tujuan_pengujian)} label="Lainnya" />
             </View>
 
